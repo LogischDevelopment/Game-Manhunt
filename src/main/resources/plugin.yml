@@ -1,0 +1,11 @@
+name: Manhunt
+version: '1.0-SNAPSHOT'
+main: tv.logisch.manhunt.Manhunt
+api-version: '1.21'
+
+commands:
+  event:
+    description: Manage the event
+    permission: logisch.event.setup
+  compass:
+    description: Get the compass

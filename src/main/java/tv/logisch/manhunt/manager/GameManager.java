@@ -1,0 +1,210 @@
+package tv.logisch.manhunt.manager;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.TitlePart;
+import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import tv.logisch.manhunt.Manhunt;
+import tv.logisch.manhunt.enums.GameState;
+import tv.logisch.manhunt.utils.AnimationUtils;
+import tv.logisch.manhunt.utils.Format;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class GameManager {
+
+    @Getter @Setter @Accessors(fluent = true)
+    private static GameState state = GameState.WAITING;
+
+    @Getter @Setter @Accessors(fluent = true)
+    private static long totalReleaseTime = 300;
+    @Getter @Setter @Accessors(fluent = true)
+    private static long releaseTime = 300;
+
+    @Getter @Setter @Accessors(fluent = true)
+    private static long time = 0;
+
+    public static BossBar bossBar;
+
+
+    private static BukkitRunnable runnable;
+
+    public static void setBossBar(String title, double progress) {
+        bossBar.setTitle(title);
+        bossBar.setProgress(progress);
+    }
+
+    public static void startGame() {
+        if(state != GameState.WAITING) return;
+        state = GameState.STARTING;
+        releaseTime = totalReleaseTime;
+        bossBar = Bukkit.createBossBar(Format.time(releaseTime), BarColor.BLUE, BarStyle.SOLID);
+        bossBar.setProgress(1);
+        bossBar.setVisible(true);
+        Bukkit.getOnlinePlayers().forEach(bossBar::addPlayer);
+        AnimationUtils.startAnimation();
+
+        runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(GameManager.state().equals(GameState.RUNNING)) {
+                    if(GameManager.releaseTime() == 1) {
+                        Bukkit.setWhitelist(false);
+                        Bukkit.getOnlinePlayers().forEach(player -> {
+                            player.sendMessage("§8[§bManhunt§8] §7Die Hunter wurden freigelassen!");
+                            player.playSound(player, Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
+                        });
+                        GameManager.startCompassTracker();
+                    }
+
+                    GameManager.releaseTime(GameManager.releaseTime() - 1);
+                    if(releaseTime < 1) GameManager.time(GameManager.time() + 1);
+                }
+            }
+        };
+        runnable.runTaskTimer(Manhunt.instance(), 20, 20);
+
+        state = GameState.RUNNING;
+
+    }
+
+    public static void pauseGame() {
+        state = GameState.PAUSED;
+        Bukkit.getServer().getServerTickManager().setFrozen(true);
+    }
+
+    public static void resumeGame() {
+        state = GameState.RUNNING;
+        Bukkit.getServer().getServerTickManager().setFrozen(false);
+    }
+
+    public static void endGame(boolean runnerFinished) {
+        state = GameState.ENDING;
+        long time = GameManager.time();
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            player.sendMessage("§8[§bManhunt§8] §7Das Spiel ist vorbei!");
+            player.sendMessage(Component.text("§8[§bManhunt§8] §7Die Zeit: §b" + Format.time(time)));
+            player.playSound(player, Sound.ENTITY_ENDER_DRAGON_DEATH, 1, 1);
+
+            if(runnerFinished) {
+                player.sendMessage("§8[§bManhunt§8] §aDie Runner haben gewonnen!");
+                player.sendTitlePart(TitlePart.TITLE, Component.text("§aDie Runner haben gewonnen!"));
+                player.sendTitlePart(TitlePart.SUBTITLE, Component.text("§b" + Format.time(time)));
+            } else {
+                player.sendMessage("§8[§bManhunt§8] §cDie Hunter haben gewonnen!");
+                player.sendTitlePart(TitlePart.TITLE, Component.text("§cDie Hunter haben gewonnen!"));
+                player.sendTitlePart(TitlePart.SUBTITLE, Component.text("§b" + Format.time(time)));
+            }
+            player.setGameMode(GameMode.SPECTATOR);
+
+        });
+        Bukkit.getOnlinePlayers().forEach(GameManager.bossBar::removePlayer);
+        GameManager.bossBar.removeAll();
+        AnimationUtils.stopAnimation();
+    }
+
+    public static List<OfflinePlayer> getRunners() {
+        return Bukkit.getServer().getWhitelistedPlayers().stream().toList();
+    }
+
+    public static boolean isRunner(OfflinePlayer player) {
+        return getRunners().contains(player);
+    }
+
+    public static void addRunner(OfflinePlayer player) {
+        player.setWhitelisted(true);
+    }
+
+    public static void removeRunner(OfflinePlayer player) {
+        player.setWhitelisted(false);
+    }
+
+    public static void startCompassTracker() {
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                Map<Player, Location> locations = new HashMap<>();
+                for(OfflinePlayer p : Bukkit.getWhitelistedPlayers()) {
+                    if(p.isOnline() && p.getPlayer() != null) locations.put(p.getPlayer(), p.getPlayer().getLocation());
+                }
+                for(Player player : Bukkit.getOnlinePlayers()) {
+                    Location loc = player.getLocation();
+                    AtomicReference<Location> closest = new AtomicReference<>(null);
+                    AtomicReference<Player> closestPlayer = new AtomicReference<>(null);
+                    locations.forEach((p, l) -> {
+                        if(closest.get() == null) {
+                            closest.set(l);
+                            closestPlayer.set(p);
+                        } else if(checkDistance(loc, l) < checkDistance(loc, closest.get())) {
+                            closest.set(l);
+                            closestPlayer.set(p);
+                        }
+                    });
+                    if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
+                    player.setCompassTarget(closest.get());
+                    player.getInventory().forEach(itemStack -> {
+                        if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
+                            ItemMeta meta = itemStack.getItemMeta();
+                            if(closestPlayer.get() != null) {
+                                meta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
+                                itemStack.setItemMeta(meta);
+                            } else {
+                                meta.displayName(Component.text("§8» §7Spawn"));
+                                itemStack.setItemMeta(meta);
+                            }
+                        }
+                    });
+                }
+            }
+        };
+        runnable.runTaskTimer(Manhunt.instance(), 0, 600);
+    }
+
+    public static void updatePlayerCompass(Player player) {
+        Map<Player, Location> locations = new HashMap<>();
+        for(OfflinePlayer p : Bukkit.getWhitelistedPlayers()) {
+            if(p.isOnline() && p.getPlayer() != null) locations.put(p.getPlayer(), p.getPlayer().getLocation());
+        }
+        Location loc = player.getLocation();
+        AtomicReference<Location> closest = new AtomicReference<>(null);
+        AtomicReference<Player> closestPlayer = new AtomicReference<>(null);
+        locations.forEach((p, l) -> {
+            if(closest.get() == null) {
+                closest.set(l);
+                closestPlayer.set(p);
+            } else if(checkDistance(loc, l) < checkDistance(loc, closest.get())) {
+                closest.set(l);
+                closestPlayer.set(p);
+            }
+        });
+        if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
+        player.setCompassTarget(closest.get());
+        player.getInventory().forEach(itemStack -> {
+            if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
+                ItemMeta meta = itemStack.getItemMeta();
+                if(closestPlayer.get() != null) {
+                    meta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
+                    itemStack.setItemMeta(meta);
+                } else {
+                    meta.displayName(Component.text("§8» §7Spawn"));
+                    itemStack.setItemMeta(meta);
+                }
+            }
+        });
+    }
+
+    public static double checkDistance(Location l1, Location l2) {
+        return l1.distance(l2);
+    }
+
+}
