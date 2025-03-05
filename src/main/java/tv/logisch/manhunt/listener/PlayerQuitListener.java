@@ -23,7 +23,7 @@ public class PlayerQuitListener implements Listener {
             p.sendMessage(Component.text("§8[§c-§8] §7" + e.getPlayer().getName() + " §8(§7" + role + "§8)"));
         });
 
-        if(!GameManager.state().equals(GameState.WAITING)) return;
+        if(GameManager.state().equals(GameState.WAITING)) return;
 
         for(OfflinePlayer player : Bukkit.getWhitelistedPlayers()) {
             if(player.getPlayer() != null && Bukkit.getOnlinePlayers().contains(player.getPlayer()) && player.getPlayer().getGameMode().equals(GameMode.SURVIVAL) && !player.getPlayer().getUniqueId().equals(e.getPlayer().getUniqueId())) {

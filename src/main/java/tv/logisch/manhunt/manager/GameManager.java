@@ -75,6 +75,7 @@ public class GameManager {
         runnable.runTaskTimer(Manhunt.instance(), 20, 20);
 
         state = GameState.RUNNING;
+        Bukkit.getServerTickManager().setFrozen(false);
 
     }
 

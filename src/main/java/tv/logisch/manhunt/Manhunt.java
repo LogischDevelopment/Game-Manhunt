@@ -52,6 +52,7 @@ public final class Manhunt extends JavaPlugin {
             w.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
         });
 
+        Bukkit.getServerTickManager().setFrozen(true);
         Bukkit.getOfflinePlayer("Logisch_XD").setWhitelisted(true);
 
     }
