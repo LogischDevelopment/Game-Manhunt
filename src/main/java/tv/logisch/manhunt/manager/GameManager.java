@@ -146,10 +146,10 @@ public class GameManager {
                     AtomicReference<Location> closest = new AtomicReference<>(null);
                     AtomicReference<Player> closestPlayer = new AtomicReference<>(null);
                     locations.forEach((p, l) -> {
-                        if(closest.get() == null) {
+                        if(closest.get() == null && l.getWorld() == loc.getWorld()) {
                             closest.set(l);
                             closestPlayer.set(p);
-                        } else if(checkDistance(loc, l) < checkDistance(loc, closest.get())) {
+                        } else if(loc.getWorld() == l.getWorld() && checkDistance(loc, l) < checkDistance(loc, closest.get())) {
                             closest.set(l);
                             closestPlayer.set(p);
                         }
@@ -190,7 +190,7 @@ public class GameManager {
         AtomicReference<Location> closest = new AtomicReference<>(null);
         AtomicReference<Player> closestPlayer = new AtomicReference<>(null);
         locations.forEach((p, l) -> {
-            if(closest.get() == null) {
+            if(closest.get() == null && l.getWorld() == loc.getWorld()) {
                 closest.set(l);
                 closestPlayer.set(p);
             } else if(loc.getWorld() == l.getWorld() && checkDistance(loc, l) < checkDistance(loc, closest.get())) {
