@@ -37,6 +37,9 @@ public class GameManager {
     public static BossBar bossBar;
 
 
+    public static List<Location> netherPortals = new ArrayList<>();
+
+
     private static BukkitRunnable runnable;
 
     public static void setBossBar(String title, double progress) {
@@ -151,7 +154,14 @@ public class GameManager {
                             closestPlayer.set(p);
                         }
                     });
-                    if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
+                    if(closest.get() == null) {
+                        for(Location l : netherPortals) {
+                            if(closest.get() == null) closest.set(l);
+                            if(l.getWorld() != loc.getWorld()) continue;
+                            else if(checkDistance(loc, l) < checkDistance(loc, closest.get())) closest.set(l);
+                        }
+                        if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
+                    }
                     player.setCompassTarget(closest.get());
                     player.getInventory().forEach(itemStack -> {
                         if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
@@ -183,12 +193,19 @@ public class GameManager {
             if(closest.get() == null) {
                 closest.set(l);
                 closestPlayer.set(p);
-            } else if(checkDistance(loc, l) < checkDistance(loc, closest.get())) {
+            } else if(loc.getWorld() == l.getWorld() && checkDistance(loc, l) < checkDistance(loc, closest.get())) {
                 closest.set(l);
                 closestPlayer.set(p);
             }
         });
-        if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
+        if(closest.get() == null) {
+            for(Location l : netherPortals) {
+                if(closest.get() == null) closest.set(l);
+                if(l.getWorld() != loc.getWorld()) continue;
+                else if(checkDistance(loc, l) < checkDistance(loc, closest.get())) closest.set(l);
+            }
+            if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
+        }
         player.setCompassTarget(closest.get());
         player.getInventory().forEach(itemStack -> {
             if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
@@ -205,7 +222,12 @@ public class GameManager {
     }
 
     public static double checkDistance(Location l1, Location l2) {
-        return l1.distance(l2);
+        if(l1.getWorld() != l2.getWorld()) return Double.MAX_VALUE;
+        double x1 = l1.getX();
+        double z1 = l1.getZ();
+        double x2 = l2.getX();
+        double z2 = l2.getZ();
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(z1 - z2, 2));
     }
 
 }
