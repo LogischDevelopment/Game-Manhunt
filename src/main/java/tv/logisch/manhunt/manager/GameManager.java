@@ -11,6 +11,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import tv.logisch.manhunt.Manhunt;
@@ -139,7 +140,12 @@ public class GameManager {
             public void run() {
                 Map<Player, Location> locations = new HashMap<>();
                 for(OfflinePlayer p : Bukkit.getWhitelistedPlayers()) {
-                    if(p.isOnline() && p.getPlayer() != null) locations.put(p.getPlayer(), p.getPlayer().getLocation());
+                    if(p.isOnline() && p.getPlayer() != null) {
+                        locations.put(p.getPlayer(), p.getPlayer().getLocation());
+                        Location clone = p.getPlayer().getLocation().clone();
+                        clone.setY(0);
+                        clone.getBlock().setType(Material.LODESTONE);
+                    }
                 }
                 for(Player player : Bukkit.getOnlinePlayers()) {
                     Location loc = player.getLocation();
@@ -162,13 +168,15 @@ public class GameManager {
                         }
                         if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
                     }
-                    player.setCompassTarget(closest.get());
                     player.getInventory().forEach(itemStack -> {
                         if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
                             ItemMeta meta = itemStack.getItemMeta();
                             if(closestPlayer.get() != null) {
-                                meta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
-                                itemStack.setItemMeta(meta);
+                                ItemStack is = new ItemStack(Material.COMPASS);
+                                CompassMeta compassMeta = (CompassMeta) is.getItemMeta();
+                                compassMeta.setLodestone(closest.get());
+                                compassMeta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
+                                is.setItemMeta(compassMeta);
                             } else {
                                 meta.displayName(Component.text("§8» §7Spawn"));
                                 itemStack.setItemMeta(meta);
