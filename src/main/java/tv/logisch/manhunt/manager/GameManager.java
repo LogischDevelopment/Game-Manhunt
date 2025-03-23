@@ -172,9 +172,10 @@ public class GameManager {
                         if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
                             ItemMeta meta = itemStack.getItemMeta();
                             if(closestPlayer.get() != null) {
-                                ItemStack is = new ItemStack(Material.COMPASS);
+                                ItemStack is = new ItemStack(Material.LODESTONE);
                                 CompassMeta compassMeta = (CompassMeta) is.getItemMeta();
                                 compassMeta.setLodestone(closest.get());
+                                compassMeta.setLodestoneTracked(true);
                                 compassMeta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
                                 is.setItemMeta(compassMeta);
                             } else {
@@ -214,13 +215,16 @@ public class GameManager {
             }
             if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
         }
-        player.setCompassTarget(closest.get());
         player.getInventory().forEach(itemStack -> {
             if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
                 ItemMeta meta = itemStack.getItemMeta();
                 if(closestPlayer.get() != null) {
-                    meta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
-                    itemStack.setItemMeta(meta);
+                    ItemStack is = new ItemStack(Material.LODESTONE);
+                    CompassMeta compassMeta = (CompassMeta) is.getItemMeta();
+                    compassMeta.setLodestone(closest.get());
+                    compassMeta.setLodestoneTracked(true);
+                    compassMeta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
+                    is.setItemMeta(compassMeta);
                 } else {
                     meta.displayName(Component.text("§8» §7Spawn"));
                     itemStack.setItemMeta(meta);
