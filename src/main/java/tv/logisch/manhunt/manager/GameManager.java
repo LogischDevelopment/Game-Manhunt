@@ -170,6 +170,7 @@ public class GameManager {
                                 meta.setLodestone(closest.get());
                                 meta.setLodestoneTracked(true);
                                 meta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
+                                itemStack.setItemMeta(meta);
                             }
                         }
                     });
