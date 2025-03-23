@@ -143,7 +143,7 @@ public class GameManager {
                     if(p.isOnline() && p.getPlayer() != null) {
                         locations.put(p.getPlayer(), p.getPlayer().getLocation());
                         Location clone = p.getPlayer().getLocation().clone();
-                        clone.setY(0);
+                        clone.setY(clone.getWorld().getMinHeight());
                         clone.getBlock().setType(Material.LODESTONE);
                     }
                 }
@@ -161,12 +161,7 @@ public class GameManager {
                         }
                     });
                     if(closest.get() == null) {
-                        for(Location l : netherPortals) {
-                            if(closest.get() == null) closest.set(l);
-                            if(l.getWorld() != loc.getWorld()) continue;
-                            else if(checkDistance(loc, l) < checkDistance(loc, closest.get())) closest.set(l);
-                        }
-                        if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
+                        continue;
                     }
                     player.getInventory().forEach(itemStack -> {
                         if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
@@ -188,49 +183,6 @@ public class GameManager {
             }
         };
         runnable.runTaskTimer(Manhunt.instance(), 0, 600);
-    }
-
-    public static void updatePlayerCompass(Player player) {
-        Map<Player, Location> locations = new HashMap<>();
-        for(OfflinePlayer p : Bukkit.getWhitelistedPlayers()) {
-            if(p.isOnline() && p.getPlayer() != null) locations.put(p.getPlayer(), p.getPlayer().getLocation());
-        }
-        Location loc = player.getLocation();
-        AtomicReference<Location> closest = new AtomicReference<>(null);
-        AtomicReference<Player> closestPlayer = new AtomicReference<>(null);
-        locations.forEach((p, l) -> {
-            if(closest.get() == null && l.getWorld() == loc.getWorld()) {
-                closest.set(l);
-                closestPlayer.set(p);
-            } else if(loc.getWorld() == l.getWorld() && checkDistance(loc, l) < checkDistance(loc, closest.get())) {
-                closest.set(l);
-                closestPlayer.set(p);
-            }
-        });
-        if(closest.get() == null) {
-            for(Location l : netherPortals) {
-                if(closest.get() == null) closest.set(l);
-                if(l.getWorld() != loc.getWorld()) continue;
-                else if(checkDistance(loc, l) < checkDistance(loc, closest.get())) closest.set(l);
-            }
-            if(closest.get() == null) closest.set(player.getWorld().getSpawnLocation());
-        }
-        player.getInventory().forEach(itemStack -> {
-            if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
-                ItemMeta meta = itemStack.getItemMeta();
-                if(closestPlayer.get() != null) {
-                    ItemStack is = new ItemStack(Material.LODESTONE);
-                    CompassMeta compassMeta = (CompassMeta) is.getItemMeta();
-                    compassMeta.setLodestone(closest.get());
-                    compassMeta.setLodestoneTracked(true);
-                    compassMeta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
-                    is.setItemMeta(compassMeta);
-                } else {
-                    meta.displayName(Component.text("§8» §7Spawn"));
-                    itemStack.setItemMeta(meta);
-                }
-            }
-        });
     }
 
     public static double checkDistance(Location l1, Location l2) {
