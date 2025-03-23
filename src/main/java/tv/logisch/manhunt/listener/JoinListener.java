@@ -43,9 +43,8 @@ public class JoinListener implements Listener {
         if(!runner.contains(e.getPlayer())) {
             ItemStack compass = new ItemStack(Material.COMPASS);
             ItemMeta meta = compass.getItemMeta();
-            meta.displayName(Component.text("§8» §bSpawn"));
+            meta.displayName(Component.text("§8» §bTracker"));
             compass.setItemMeta(meta);
-            GameManager.updatePlayerCompass(e.getPlayer());
             p.getInventory().addItem(compass);
         }
 
