@@ -55,7 +55,6 @@ public final class Manhunt extends JavaPlugin {
         });
 
         Bukkit.getServerTickManager().setFrozen(true);
-        Bukkit.getOfflinePlayer("Logisch_XD").setWhitelisted(true);
 
     }
 

