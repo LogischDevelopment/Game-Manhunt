@@ -21,7 +21,9 @@ public class CompassCommand implements CommandExecutor {
         meta.displayName(Component.text("§8» §bTracker"));
         compass.setItemMeta(meta);
         player.getInventory().addItem(compass);
-        GameManager.updatePlayerCompass(player);
+
+        player.sendMessage("§8[§bManhunt§8] §7You have received a tracker!");
+        player.sendMessage("§8[§bManhunt§8] §7In less than 30 seconds, the tracker will point to the nearest runner!");
         return true;
 
     }
