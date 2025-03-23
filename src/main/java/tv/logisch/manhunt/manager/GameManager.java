@@ -165,17 +165,11 @@ public class GameManager {
                     }
                     player.getInventory().forEach(itemStack -> {
                         if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
-                            ItemMeta meta = itemStack.getItemMeta();
+                            CompassMeta meta = (CompassMeta) itemStack.getItemMeta();
                             if(closestPlayer.get() != null) {
-                                ItemStack is = new ItemStack(Material.LODESTONE);
-                                CompassMeta compassMeta = (CompassMeta) is.getItemMeta();
-                                compassMeta.setLodestone(closest.get());
-                                compassMeta.setLodestoneTracked(true);
-                                compassMeta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
-                                is.setItemMeta(compassMeta);
-                            } else {
-                                meta.displayName(Component.text("§8» §7Spawn"));
-                                itemStack.setItemMeta(meta);
+                                meta.setLodestone(closest.get());
+                                meta.setLodestoneTracked(true);
+                                meta.displayName(Component.text("§8» §b" + closestPlayer.get().getName()));
                             }
                         }
                     });
