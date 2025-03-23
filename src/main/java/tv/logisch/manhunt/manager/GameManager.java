@@ -10,9 +10,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.enums.GameState;
@@ -141,10 +139,10 @@ public class GameManager {
                 Map<Player, Location> locations = new HashMap<>();
                 for(OfflinePlayer p : Bukkit.getWhitelistedPlayers()) {
                     if(p.isOnline() && p.getPlayer() != null) {
-                        locations.put(p.getPlayer(), p.getPlayer().getLocation());
                         Location clone = p.getPlayer().getLocation().clone();
                         clone.setY(clone.getWorld().getMinHeight());
                         clone.getBlock().setType(Material.LODESTONE);
+                        locations.put(p.getPlayer(), clone);
                     }
                 }
                 for(Player player : Bukkit.getOnlinePlayers()) {
@@ -163,6 +161,7 @@ public class GameManager {
                     if(closest.get() == null) {
                         continue;
                     }
+                    Bukkit.getConsoleSender().sendMessage("Update compass for "+player.getName());
                     player.getInventory().forEach(itemStack -> {
                         if(itemStack != null && itemStack.getType().equals(Material.COMPASS)) {
                             CompassMeta meta = (CompassMeta) itemStack.getItemMeta();
