@@ -36,9 +36,6 @@ public class GameManager {
     public static BossBar bossBar;
 
 
-    public static List<Location> netherPortals = new ArrayList<>();
-
-
     private static BukkitRunnable runnable;
 
     public static void setBossBar(String title, double progress) {
