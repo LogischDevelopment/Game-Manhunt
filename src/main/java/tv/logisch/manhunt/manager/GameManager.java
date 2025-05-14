@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.enums.GameState;
+import tv.logisch.manhunt.objects.LatestPositionObject;
 import tv.logisch.manhunt.utils.AnimationUtils;
 import tv.logisch.manhunt.utils.Format;
 
@@ -35,7 +36,7 @@ public class GameManager {
 
     public static BossBar bossBar;
 
-
+    public static List<LatestPositionObject> latestPositions = new ArrayList<>();
     private static BukkitRunnable runnable;
 
     public static void setBossBar(String title, double progress) {
@@ -140,6 +141,8 @@ public class GameManager {
                         clone.setY(clone.getWorld().getMinHeight());
                         clone.getBlock().setType(Material.LODESTONE);
                         locations.put(p.getPlayer(), clone);
+                        latestPositions.removeIf(l -> l.getPlayer().equals(p.getPlayer()) && l.getL().getWorld().equals(clone.getWorld()));
+                        latestPositions.add(new LatestPositionObject(p.getPlayer(), clone));
                     }
                 }
                 for(Player player : Bukkit.getOnlinePlayers()) {
@@ -156,7 +159,19 @@ public class GameManager {
                         }
                     });
                     if(closest.get() == null) {
-                        continue;
+                        locations.forEach((p, l) -> {
+                            if (closest.get() == null && l.getWorld() == loc.getWorld()) {
+                                closest.set(l);
+                                closestPlayer.set(p);
+                            } else if (loc.getWorld() == l.getWorld() && checkDistance(loc, l) < checkDistance(loc, closest.get())) {
+                                closest.set(l);
+                                closestPlayer.set(p);
+                            }
+                        });
+                        if(closest.get() == null) {
+                            player.sendMessage("§8[§bManhunt§8] §7Es wurde kein Spieler zum tracken gefunden!");
+                            return;
+                        }
                     }
                     Bukkit.getConsoleSender().sendMessage("Update compass for "+player.getName());
                     player.getInventory().forEach(itemStack -> {
