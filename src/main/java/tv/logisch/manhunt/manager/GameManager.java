@@ -39,6 +39,9 @@ public class GameManager {
     public static List<LatestPositionObject> latestPositions = new ArrayList<>();
     private static BukkitRunnable runnable;
 
+    @Getter @Setter
+    private static List<UUID> runners = new ArrayList<>();
+
     public static void setBossBar(String title, double progress) {
         bossBar.setTitle(title);
         bossBar.setProgress(progress);
@@ -114,20 +117,16 @@ public class GameManager {
         AnimationUtils.stopAnimation();
     }
 
-    public static List<OfflinePlayer> getRunners() {
-        return Bukkit.getServer().getWhitelistedPlayers().stream().toList();
-    }
-
     public static boolean isRunner(OfflinePlayer player) {
-        return getRunners().contains(player);
+        return getRunners().contains(player.getUniqueId());
     }
 
     public static void addRunner(OfflinePlayer player) {
-        player.setWhitelisted(true);
+        runners.add(player.getUniqueId());
     }
 
     public static void removeRunner(OfflinePlayer player) {
-        player.setWhitelisted(false);
+        runners.remove(player.getUniqueId());
     }
 
     public static void startCompassTracker() {
@@ -135,7 +134,8 @@ public class GameManager {
             @Override
             public void run() {
                 Map<Player, Location> locations = new HashMap<>();
-                for(OfflinePlayer p : Bukkit.getWhitelistedPlayers()) {
+                for(UUID pUuid : GameManager.getRunners()) {
+                    OfflinePlayer p = Bukkit.getOfflinePlayer(pUuid);
                     if(p.isOnline() && p.getPlayer() != null) {
                         Location clone = p.getPlayer().getLocation().clone();
                         clone.setY(clone.getWorld().getMinHeight());

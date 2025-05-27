@@ -11,6 +11,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import tv.logisch.manhunt.enums.GameState;
 import tv.logisch.manhunt.manager.GameManager;
 
+import java.util.UUID;
+
 public class PlayerQuitListener implements Listener {
 
     @EventHandler
@@ -18,14 +20,15 @@ public class PlayerQuitListener implements Listener {
 
         e.quitMessage(Component.empty());
 
-        String role = Bukkit.getWhitelistedPlayers().contains(e.getPlayer()) ? "§aRunner" : "§cHunter";
+        String role = GameManager.isRunner(e.getPlayer()) ? "§aRunner" : "§cHunter";
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.sendMessage(Component.text("§8[§c-§8] §7" + e.getPlayer().getName() + " §8(§7" + role + "§8)"));
         });
 
         if(GameManager.state().equals(GameState.WAITING)) return;
 
-        for(OfflinePlayer player : Bukkit.getWhitelistedPlayers()) {
+        for(UUID playerUuid : GameManager.getRunners()) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(playerUuid);
             if(player.getPlayer() != null && Bukkit.getOnlinePlayers().contains(player.getPlayer()) && player.getPlayer().getGameMode().equals(GameMode.SURVIVAL) && !player.getPlayer().getUniqueId().equals(e.getPlayer().getUniqueId())) {
                 return;
             }

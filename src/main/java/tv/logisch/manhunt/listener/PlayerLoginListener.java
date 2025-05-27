@@ -7,6 +7,7 @@ import org.bukkit.Server;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import tv.logisch.manhunt.manager.GameManager;
 
 import java.util.Set;
 
@@ -19,9 +20,8 @@ public class PlayerLoginListener implements Listener {
             e.disallow(PlayerLoginEvent.Result.KICK_FULL, Component.text("§cDer Server ist voll!"));
             return;
         } else if(e.getResult() == PlayerLoginEvent.Result.KICK_WHITELIST) {
-            if(e.getPlayer().getName().equals("Logisch_XD")) {
+            if(GameManager.isRunner(e.getPlayer())) {
                 e.allow();
-                if(!e.getPlayer().isWhitelisted()) e.getPlayer().setWhitelisted(true);
                 return;
             }
             e.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, Component.text("§8[§bManhunt§8] §cDie Hunter sind noch nicht berechtigt loszulaufen!"));
@@ -32,10 +32,9 @@ public class PlayerLoginListener implements Listener {
         }
 
         Server s = Bukkit.getServer();
-        Set<OfflinePlayer> runner = s.getWhitelistedPlayers();
         boolean isRunning = !s.hasWhitelist();
 
-        if(!isRunning && !runner.contains(e.getPlayer())) {
+        if(!isRunning && !GameManager.isRunner(e.getPlayer())) {
             e.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, Component.text("§8[§bManhunt§8] §cDie Hunter sind noch nicht berechtigt loszulaufen!"));
             return;
         }

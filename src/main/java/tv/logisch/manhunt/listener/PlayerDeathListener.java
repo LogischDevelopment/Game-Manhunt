@@ -10,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import tv.logisch.manhunt.manager.GameManager;
 
+import java.util.UUID;
+
 public class PlayerDeathListener implements Listener {
 
     @EventHandler
@@ -24,7 +26,8 @@ public class PlayerDeathListener implements Listener {
                 p.sendMessage(Component.text("§8[§c†§8] §7" + e.getPlayer().getName()));
             });
 
-            for(OfflinePlayer player : Bukkit.getWhitelistedPlayers()) {
+            for(UUID playerUuid : GameManager.getRunners()) {
+                OfflinePlayer player = Bukkit.getOfflinePlayer(playerUuid);
                 if(player.getPlayer() != null && Bukkit.getOnlinePlayers().contains(player.getPlayer()) && player.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
                     return;
                 }

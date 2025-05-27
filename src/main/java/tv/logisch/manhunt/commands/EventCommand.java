@@ -69,11 +69,19 @@ public class EventCommand implements CommandExecutor {
             String playerName = strings[2];
             if(action.equalsIgnoreCase("add")) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(playerName);
-                target.setWhitelisted(true);
+                if(GameManager.isRunner(target)) {
+                    p.sendMessage("§8[§bManhunt§8] §c" + target.getName() + " §8(§7Runner§8) §cist bereits ein Runner!");
+                    return true;
+                }
+                GameManager.addRunner(target);
                 p.sendMessage("§8[§bManhunt§8] §7" + target.getName() + " §8(§7Runner§8) §7wurde hinzugefügt!");
             } else if(action.equalsIgnoreCase("remove")) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(playerName);
-                target.setWhitelisted(false);
+                if(!GameManager.isRunner(target)) {
+                    p.sendMessage("§8[§bManhunt§8] §c" + target.getName() + " §8(§7Runner§8) §cist kein Runner!");
+                    return true;
+                }
+                GameManager.removeRunner(target);
                 p.sendMessage("§8[§bManhunt§8] §7" + target.getName() + " §8(§7Runner§8) §7wurde entfernt!");
             } else {
                 p.sendMessage("§8[§bManhunt§8] §cUsage: /event runner <add/remove> <player>");
