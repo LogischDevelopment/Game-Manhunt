@@ -11,7 +11,9 @@ import tv.logisch.manhunt.commands.CompassCommand;
 import tv.logisch.manhunt.commands.EventCommand;
 import tv.logisch.manhunt.commands.completions.EventCommandCompletion;
 import tv.logisch.manhunt.listener.*;
+import tv.logisch.manhunt.manager.GameManager;
 
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class Manhunt extends JavaPlugin {
@@ -56,6 +58,8 @@ public final class Manhunt extends JavaPlugin {
         });
 
         Bukkit.getServerTickManager().setFrozen(true);
+
+        GameManager.addRunner(UUID.fromString("7da267aa-940f-438c-9c1a-81f87155daff"));
 
     }
 

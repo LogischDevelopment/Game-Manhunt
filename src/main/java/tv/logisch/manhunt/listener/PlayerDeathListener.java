@@ -18,7 +18,7 @@ public class PlayerDeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e) {
 
         e.deathMessage(Component.empty());
-        if(GameManager.isRunner(e.getPlayer())) {
+        if(GameManager.isRunner(e.getPlayer().getUniqueId())) {
 
             e.getPlayer().setGameMode(GameMode.SPECTATOR);
             e.getPlayer().sendMessage(Component.text("§8[§bManhunt§8] §cDu bist ausgeschieden!"));

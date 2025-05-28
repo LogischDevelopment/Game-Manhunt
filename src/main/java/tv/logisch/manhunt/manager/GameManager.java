@@ -117,16 +117,16 @@ public class GameManager {
         AnimationUtils.stopAnimation();
     }
 
-    public static boolean isRunner(OfflinePlayer player) {
-        return getRunners().contains(player.getUniqueId());
+    public static boolean isRunner(UUID player) {
+        return getRunners().contains(player);
     }
 
-    public static void addRunner(OfflinePlayer player) {
-        runners.add(player.getUniqueId());
+    public static void addRunner(UUID player) {
+        runners.add(player);
     }
 
-    public static void removeRunner(OfflinePlayer player) {
-        runners.remove(player.getUniqueId());
+    public static void removeRunner(UUID player) {
+        runners.remove(player);
     }
 
     public static void startCompassTracker() {

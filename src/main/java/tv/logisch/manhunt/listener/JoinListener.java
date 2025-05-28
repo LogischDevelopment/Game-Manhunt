@@ -24,23 +24,14 @@ public class JoinListener implements Listener {
         e.joinMessage(Component.empty());
 
         Server s = Bukkit.getServer();
-        Set<OfflinePlayer> runner = s.getWhitelistedPlayers();
-        boolean isRunning = !s.hasWhitelist();
-
-        if(!isRunning) {
-            if(!runner.contains(e.getPlayer())) {
-                p.kick(Component.text("§8[§bManhunt§8] §cDie Hunter sind noch nicht berechtigt loszulaufen!"));
-                return;
-            }
-        }
         if(GameManager.bossBar != null) GameManager.bossBar.addPlayer(e.getPlayer());
 
-        String role = runner.contains(e.getPlayer()) ? "§aRunner" : "§cHunter";
+        String role = GameManager.isRunner(e.getPlayer().getUniqueId()) ? "§aRunner" : "§cHunter";
         Bukkit.getOnlinePlayers().forEach(target -> {
             target.sendMessage(Component.text("§8[§a+§8] §7" + p.getName() + " §8(§7" + role + "§8)"));
         });
 
-        if(!runner.contains(e.getPlayer())) {
+        if(!GameManager.isRunner(e.getPlayer().getUniqueId())) {
             ItemStack compass = new ItemStack(Material.COMPASS);
             ItemMeta meta = compass.getItemMeta();
             meta.displayName(Component.text("§8» §bTracker"));

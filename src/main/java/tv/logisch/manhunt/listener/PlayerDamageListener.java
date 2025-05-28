@@ -13,11 +13,11 @@ public class PlayerDamageListener implements Listener {
         if(!(e.getEntity() instanceof Player target)) return;
         if(!(e.getDamageSource().getCausingEntity() instanceof Player damager)) return;
 
-        if(GameManager.isRunner(damager) && GameManager.isRunner(target)) {
+        if(GameManager.isRunner(damager.getUniqueId()) && GameManager.isRunner(target.getUniqueId())) {
             e.setCancelled(true);
             return;
         }
-        if(!GameManager.isRunner(damager) && !GameManager.isRunner(target)) {
+        if(!GameManager.isRunner(damager.getUniqueId()) && !GameManager.isRunner(target.getUniqueId())) {
             e.setCancelled(true);
             return;
         }

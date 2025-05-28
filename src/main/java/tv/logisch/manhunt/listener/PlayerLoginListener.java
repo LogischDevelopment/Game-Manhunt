@@ -20,7 +20,7 @@ public class PlayerLoginListener implements Listener {
             e.disallow(PlayerLoginEvent.Result.KICK_FULL, Component.text("§cDer Server ist voll!"));
             return;
         } else if(e.getResult() == PlayerLoginEvent.Result.KICK_WHITELIST) {
-            if(GameManager.isRunner(e.getPlayer())) {
+            if(GameManager.isRunner(e.getPlayer().getUniqueId())) {
                 e.allow();
                 return;
             }
@@ -34,7 +34,7 @@ public class PlayerLoginListener implements Listener {
         Server s = Bukkit.getServer();
         boolean isRunning = !s.hasWhitelist();
 
-        if(!isRunning && !GameManager.isRunner(e.getPlayer())) {
+        if(!isRunning && !GameManager.isRunner(e.getPlayer().getUniqueId())) {
             e.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, Component.text("§8[§bManhunt§8] §cDie Hunter sind noch nicht berechtigt loszulaufen!"));
             return;
         }

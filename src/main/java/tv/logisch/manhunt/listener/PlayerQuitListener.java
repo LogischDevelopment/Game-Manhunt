@@ -20,7 +20,7 @@ public class PlayerQuitListener implements Listener {
 
         e.quitMessage(Component.empty());
 
-        String role = GameManager.isRunner(e.getPlayer()) ? "§aRunner" : "§cHunter";
+        String role = GameManager.isRunner(e.getPlayer().getUniqueId()) ? "§aRunner" : "§cHunter";
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.sendMessage(Component.text("§8[§c-§8] §7" + e.getPlayer().getName() + " §8(§7" + role + "§8)"));
         });
