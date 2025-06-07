@@ -20,10 +20,8 @@ public class EventCommand implements CommandExecutor {
             return false;
         }
 
-        Player p = (Player) commandSender;
-
         if(strings.length == 0) {
-            p.sendMessage("""
+            commandSender.sendMessage("""
                     §8[§bManhunt§8] §cUsage:
                     §8[§bManhunt§8] §7/event start
                     §8[§bManhunt§8] §7/event releaseTime <seconds>
@@ -37,7 +35,7 @@ public class EventCommand implements CommandExecutor {
 
         if(subCommand.equalsIgnoreCase("start")) {
             if(!GameManager.state().equals(GameState.WAITING)) {
-                p.sendMessage(Component.text("§8[§bManhunt§8] §cDas Event läuft bereits! §8(§c/stop§8)"));
+                commandSender.sendMessage(Component.text("§8[§bManhunt§8] §cDas Event läuft bereits! §8(§c/stop§8)"));
                 return true;
             }
             GameManager.startGame();
@@ -46,12 +44,12 @@ public class EventCommand implements CommandExecutor {
         } else if(subCommand.equalsIgnoreCase("releaseTime")) {
 
             if(!Bukkit.hasWhitelist()) {
-                p.sendMessage(Component.text("§8[§bManhunt§8] §cDie Hunter wurden bereits freigelassen!"));
+                commandSender.sendMessage(Component.text("§8[§bManhunt§8] §cDie Hunter wurden bereits freigelassen!"));
                 return true;
             }
 
             if(strings.length != 2) {
-                p.sendMessage(Component.text("§8[§bManhunt§8] §7Die Release-Zeit ist aktuell auf §8(§7" + GameManager.totalReleaseTime() + "§8) §7Sekunden gesetzt!"));
+                commandSender.sendMessage(Component.text("§8[§bManhunt§8] §7Die Release-Zeit ist aktuell auf §8(§7" + GameManager.totalReleaseTime() + "§8) §7Sekunden gesetzt!"));
                 return true;
             }
             long seconds = Long.parseLong(strings[1]);
@@ -62,7 +60,7 @@ public class EventCommand implements CommandExecutor {
         } else if(subCommand.equalsIgnoreCase("runner")) {
 
             if (strings.length != 3) {
-                p.sendMessage("§8[§bManhunt§8] §cUsage: /event runner <add/remove> <player>");
+                commandSender.sendMessage("§8[§bManhunt§8] §cUsage: /event runner <add/remove> <player>");
                 return true;
             }
             String action = strings[1];
@@ -70,39 +68,39 @@ public class EventCommand implements CommandExecutor {
             if(action.equalsIgnoreCase("add")) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(playerName);
                 if(GameManager.isRunner(target.getUniqueId())) {
-                    p.sendMessage("§8[§bManhunt§8] §c" + target.getName() + " §8(§7Runner§8) §cist bereits ein Runner!");
+                    commandSender.sendMessage("§8[§bManhunt§8] §c" + target.getName() + " §8(§7Runner§8) §cist bereits ein Runner!");
                     return true;
                 }
                 GameManager.addRunner(target.getUniqueId());
-                p.sendMessage("§8[§bManhunt§8] §7" + target.getName() + " §8(§7Runner§8) §7wurde hinzugefügt!");
+                commandSender.sendMessage("§8[§bManhunt§8] §7" + target.getName() + " §8(§7Runner§8) §7wurde hinzugefügt!");
             } else if(action.equalsIgnoreCase("remove")) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(playerName);
                 if(!GameManager.isRunner(target.getUniqueId())) {
-                    p.sendMessage("§8[§bManhunt§8] §c" + target.getName() + " §8(§7Runner§8) §cist kein Runner!");
+                    commandSender.sendMessage("§8[§bManhunt§8] §c" + target.getName() + " §8(§7Runner§8) §cist kein Runner!");
                     return true;
                 }
                 GameManager.removeRunner(target.getUniqueId());
-                p.sendMessage("§8[§bManhunt§8] §7" + target.getName() + " §8(§7Runner§8) §7wurde entfernt!");
+                commandSender.sendMessage("§8[§bManhunt§8] §7" + target.getName() + " §8(§7Runner§8) §7wurde entfernt!");
             } else {
-                p.sendMessage("§8[§bManhunt§8] §cUsage: /event runner <add/remove> <player>");
+                commandSender.sendMessage("§8[§bManhunt§8] §cUsage: /event runner <add/remove> <player>");
             }
 
         } else if(subCommand.equalsIgnoreCase("pause")) {
             if(GameManager.state().equals(GameState.WAITING)) {
-                p.sendMessage("§8[§bManhunt§8] §cDas Event läuft nicht!");
+                commandSender.sendMessage("§8[§bManhunt§8] §cDas Event läuft nicht!");
                 return true;
             }
             GameManager.pauseGame();
             commandSender.sendMessage(Component.text("§8[§bManhunt§8] §7Das Event wurde pausiert!"));
         } else if(subCommand.equalsIgnoreCase("resume")) {
             if(!GameManager.state().equals(GameState.PAUSED)) {
-                p.sendMessage("§8[§bManhunt§8] §cDas Event ist nicht pausiert!");
+                commandSender.sendMessage("§8[§bManhunt§8] §cDas Event ist nicht pausiert!");
                 return true;
             }
             GameManager.resumeGame();
             commandSender.sendMessage(Component.text("§8[§bManhunt§8] §7Das Event wurde fortgesetzt!"));
         } else {
-            p.sendMessage("""
+            commandSender.sendMessage("""
                     §8[§bManhunt§8] §cUsage:
                     §8[§bManhunt§8] §7/event start
                     §8[§bManhunt§8] §7/event releaseTime <seconds>
