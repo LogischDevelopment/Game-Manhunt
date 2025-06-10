@@ -76,11 +76,11 @@ public class EventCommand implements CommandExecutor {
             } else if(action.equalsIgnoreCase("remove")) {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(playerName);
                 if(!GameManager.isRunner(target.getUniqueId())) {
-                    commandSender.sendMessage("§8[§bManhunt§8] §c" + target.getName() + " §8(§7Runner§8) §cist kein Runner!");
+                    commandSender.sendMessage("§8[§bManhunt§8] §c" + target.getName() + " §8(§7Hunter§8) §cist kein Runner!");
                     return true;
                 }
                 GameManager.removeRunner(target.getUniqueId());
-                commandSender.sendMessage("§8[§bManhunt§8] §7" + target.getName() + " §8(§7Runner§8) §7wurde entfernt!");
+                commandSender.sendMessage("§8[§bManhunt§8] §7" + target.getName() + " §8(§7Hunter§8) §7wurde entfernt!");
             } else {
                 commandSender.sendMessage("§8[§bManhunt§8] §cUsage: /event runner <add/remove> <player>");
             }

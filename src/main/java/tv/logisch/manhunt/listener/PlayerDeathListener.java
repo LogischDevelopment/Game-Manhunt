@@ -22,6 +22,7 @@ public class PlayerDeathListener implements Listener {
 
             e.getPlayer().setGameMode(GameMode.SPECTATOR);
             e.getPlayer().sendMessage(Component.text("§8[§bManhunt§8] §cDu bist ausgeschieden!"));
+            GameManager.latestPositions.removeIf(latestPosition -> latestPosition.getPlayer().getUniqueId().equals(e.getPlayer().getUniqueId()));
             Bukkit.getOnlinePlayers().forEach(p -> {
                 p.sendMessage(Component.text("§8[§c†§8] §7" + e.getPlayer().getName()));
             });

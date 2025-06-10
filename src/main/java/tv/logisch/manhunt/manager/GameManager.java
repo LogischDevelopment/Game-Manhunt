@@ -159,13 +159,13 @@ public class GameManager {
                         }
                     });
                     if(closest.get() == null) {
-                        locations.forEach((p, l) -> {
-                            if (closest.get() == null && l.getWorld() == loc.getWorld()) {
-                                closest.set(l);
-                                closestPlayer.set(p);
-                            } else if (loc.getWorld() == l.getWorld() && checkDistance(loc, l) < checkDistance(loc, closest.get())) {
-                                closest.set(l);
-                                closestPlayer.set(p);
+                        latestPositions.forEach(l -> {
+                            if (closest.get() == null && l.getL().getWorld() == loc.getWorld()) {
+                                closest.set(l.getL());
+                                closestPlayer.set(l.getPlayer());
+                            } else if (loc.getWorld() == l.getL().getWorld() && checkDistance(loc, l.getL()) < checkDistance(loc, closest.get())) {
+                                closest.set(l.getL());
+                                closestPlayer.set(l.getPlayer());
                             }
                         });
                         if(closest.get() == null) {
