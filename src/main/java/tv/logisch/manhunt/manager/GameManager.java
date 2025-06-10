@@ -136,7 +136,7 @@ public class GameManager {
                 Map<Player, Location> locations = new HashMap<>();
                 for(UUID pUuid : GameManager.getRunners()) {
                     OfflinePlayer p = Bukkit.getOfflinePlayer(pUuid);
-                    if(p.isOnline() && p.getPlayer() != null) {
+                    if(p.isOnline() && p.getPlayer() != null && p.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
                         Location clone = p.getPlayer().getLocation().clone();
                         clone.setY(clone.getWorld().getMinHeight());
                         clone.getBlock().setType(Material.LODESTONE);
