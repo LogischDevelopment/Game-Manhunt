@@ -15,7 +15,7 @@ public class EventCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
 
-        if(!commandSender.hasPermission("logisch.event.setup")) {
+        if(!commandSender.hasPermission("logisch.manhunt.admin") && !GameManager.isHost(commandSender.getName())) {
             commandSender.sendMessage("§8[§bManhunt§8] §cDazu hast du keine Rechte!");
             return false;
         }
