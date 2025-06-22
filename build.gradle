@@ -16,14 +16,30 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven {
+        name = "devload"
+        url = "https://nexus.devload.eu/repository/maven-releases/"
+    }
+    maven {
+        name = "simplecloud"
+        url = "https://repo.simplecloud.app/snapshots"
+    }
+    maven {
+        name = "buf"
+        url = "https://buf.build/gen/maven"
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    implementation("org.json:json:20240303")
 
     // lombok
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
+
+    // Logisch API
+    implementation("tv.logisch:LogiAPIClient:1.5.1")
 }
 
 def targetJavaVersion = 21
