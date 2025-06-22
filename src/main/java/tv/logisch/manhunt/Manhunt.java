@@ -7,12 +7,16 @@ import org.bukkit.GameRule;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import tv.logisch.api.LogiAPI;
 import tv.logisch.manhunt.commands.CompassCommand;
 import tv.logisch.manhunt.commands.EventCommand;
 import tv.logisch.manhunt.commands.completions.EventCommandCompletion;
 import tv.logisch.manhunt.listener.*;
 import tv.logisch.manhunt.manager.GameManager;
+import tv.logisch.manhunt.objects.GameConfig;
+import tv.logisch.manhunt.utils.Config;
 
+import java.io.File;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -24,6 +28,14 @@ public final class Manhunt extends JavaPlugin {
     @Getter @Accessors(fluent = true)
     private static Logger logger;
 
+    @Getter
+    @Accessors(fluent = true)
+    private static GameConfig gameConfig;
+
+    @Getter
+    @Accessors(fluent = true)
+    private static LogiAPI logiAPI;
+
     @Override
     public void onLoad() {
         instance = this;
@@ -33,6 +45,9 @@ public final class Manhunt extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        logiAPI = new LogiAPI(new Config(new File(Bukkit.getPluginsFolder().getPath() + "/manhunt/config.json")).get("logisch.api.key").getAsString());
+        gameConfig = new GameConfig().initialize();
+        System.out.println("Hoster: " + gameConfig.hostName() + " (" + gameConfig.hostUUID() + ")");
         logger().info("Manhunt plugin enabled!");
 
         PluginManager pm = Bukkit.getPluginManager();
@@ -59,7 +74,7 @@ public final class Manhunt extends JavaPlugin {
 
         Bukkit.getServerTickManager().setFrozen(true);
 
-        GameManager.addRunner(UUID.fromString("7da267aa-940f-438c-9c1a-81f87155daff"));
+        GameManager.addRunner(gameConfig.hostUUID());
 
     }
 
