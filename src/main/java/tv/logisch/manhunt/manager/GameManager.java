@@ -200,4 +200,8 @@ public class GameManager {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(z1 - z2, 2));
     }
 
+    public static boolean isHost(String playerName) {
+        return playerName.equalsIgnoreCase(Manhunt.gameConfig().hostName());
+    }
+
 }
