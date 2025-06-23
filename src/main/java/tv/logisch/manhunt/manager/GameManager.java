@@ -12,6 +12,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.enums.GameState;
 import tv.logisch.manhunt.objects.LatestPositionObject;
@@ -110,11 +111,34 @@ public class GameManager {
                 player.sendTitlePart(TitlePart.SUBTITLE, Component.text("§b" + Format.time(time)));
             }
             player.setGameMode(GameMode.SPECTATOR);
+            player.sendMessage(Component.text("§8[§bManhunt§8] §7Der Server stoppt in 15 Sekunden!"));
 
         });
         Bukkit.getOnlinePlayers().forEach(GameManager.bossBar::removePlayer);
         GameManager.bossBar.removeAll();
         AnimationUtils.stopAnimation();
+
+        BukkitRunnable endRunnable = getBukkitRunnable();
+        endRunnable.runTaskTimerAsynchronously(Manhunt.instance(), 0, 20);
+
+    }
+
+    private static @NotNull BukkitRunnable getBukkitRunnable() {
+        final int[] seconds = {15};
+        return new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(seconds[0] <= 0) {
+                    Bukkit.getServer().shutdown();
+                    return;
+                }
+                seconds[0]--;
+                Bukkit.getOnlinePlayers().forEach(player -> {
+                    player.setLevel(seconds[0]);
+                    player.setExp(seconds[0] / 15f);
+                });
+            }
+        };
     }
 
     public static boolean isRunner(UUID player) {
