@@ -18,6 +18,7 @@ import tv.logisch.manhunt.enums.GameState;
 import tv.logisch.manhunt.objects.LatestPositionObject;
 import tv.logisch.manhunt.utils.AnimationUtils;
 import tv.logisch.manhunt.utils.Format;
+import tv.logisch.manhunt.utils.Velocity;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -69,6 +70,9 @@ public class GameManager {
                             player.playSound(player, Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
                         });
                         GameManager.startCompassTracker();
+
+                        Player host = GameManager.getHost();
+                        Velocity.sendToVelocity(host, "executeCommand:joinme:"+host.getUniqueId());
                     }
 
                     GameManager.releaseTime(GameManager.releaseTime() - 1);
@@ -222,6 +226,10 @@ public class GameManager {
         double x2 = l2.getX();
         double z2 = l2.getZ();
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(z1 - z2, 2));
+    }
+
+    public static Player getHost() {
+        return Bukkit.getPlayer(Manhunt.gameConfig().hostUUID());
     }
 
     public static boolean isHost(String playerName) {
