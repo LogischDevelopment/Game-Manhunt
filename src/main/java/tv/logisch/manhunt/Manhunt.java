@@ -46,8 +46,11 @@ public final class Manhunt extends JavaPlugin {
     public void onEnable() {
         logiAPI = new LogiAPI(new Config(new File(Bukkit.getPluginsFolder().getPath() + "/manhunt/config.json")).get("logisch.api.key").getAsString());
         gameConfig = new GameConfig().initialize();
+
+        /* Set Serverhost Properties for LogiAPI in Core Plugin */
         System.setProperty("LOGISCH_TYPE", "GAME");
         System.setProperty("LOGISCH_FLAGS", "host="+gameConfig.hostUUID().toString()+";hostName="+gameConfig.hostName());
+
         logger().info("Manhunt plugin enabled!");
         System.out.println("Hoster: " + gameConfig.hostName() + " (" + gameConfig.hostUUID() + ")");
 
