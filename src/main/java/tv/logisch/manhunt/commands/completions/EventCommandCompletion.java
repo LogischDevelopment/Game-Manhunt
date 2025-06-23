@@ -15,6 +15,9 @@ public class EventCommandCompletion implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
 
+        if(!commandSender.hasPermission("logisch.manhunt.admin") && !strings[0].equalsIgnoreCase("runner")) {
+            return List.of();
+        }
         if(strings.length == 1) {
             return Stream.of("start", "pause", "resume", "releaseTime", "runner").filter(w -> w.toLowerCase().startsWith(strings[0].toLowerCase())).toList();
         }

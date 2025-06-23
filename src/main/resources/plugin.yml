@@ -6,6 +6,5 @@ api-version: '1.21'
 commands:
   event:
     description: Manage the event
-    permission: logisch.event.setup
   compass:
     description: Get the compass
