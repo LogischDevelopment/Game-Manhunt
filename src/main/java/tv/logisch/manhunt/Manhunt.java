@@ -65,6 +65,8 @@ public final class Manhunt extends JavaPlugin {
         pm.registerEvents(new PlayerFoodLevelChangeListener(), this);
         pm.registerEvents(new PlayerSwitchWorld(), this);
         pm.registerEvents(new PlayerDamageListener(), this);
+        pm.registerEvents(new BreakBlockListener(), this);
+        pm.registerEvents(new PlaceBlockListener(), this);
 
         PluginCommand eventCmd = getCommand("event");
         eventCmd.setExecutor(new EventCommand());
