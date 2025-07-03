@@ -141,6 +141,10 @@ public class GameManager {
                 Bukkit.getOnlinePlayers().forEach(player -> {
                     player.setLevel(seconds[0]);
                     player.setExp(seconds[0] / 15f);
+                    if(seconds[0] == 5 || seconds[0] <= 3) {
+                        player.sendMessage(Component.text("§8[§bManhunt§8] §7Der Server stoppt in §b" + seconds[0] + " §7Sekunden!"));
+                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                    }
                 });
             }
         };
