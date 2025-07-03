@@ -115,7 +115,7 @@ public class GameManager {
                 player.sendTitlePart(TitlePart.SUBTITLE, Component.text("§b" + Format.time(time)));
             }
             player.setGameMode(GameMode.SPECTATOR);
-            player.sendMessage(Component.text("§8[§bManhunt§8] §7Der Server stoppt in 15 Sekunden!"));
+            player.sendMessage(Component.text("§8[§bManhunt§8] §7Der Server stoppt in §b15 §7Sekunden!"));
 
         });
         Bukkit.getOnlinePlayers().forEach(GameManager.bossBar::removePlayer);
@@ -133,6 +133,7 @@ public class GameManager {
             @Override
             public void run() {
                 if(seconds[0] <= 0) {
+                    System.out.println("Shutting down server now...");
                     Bukkit.getServer().shutdown();
                     return;
                 }
