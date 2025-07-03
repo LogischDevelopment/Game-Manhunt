@@ -118,7 +118,9 @@ public class GameManager {
             player.sendMessage(Component.text("§8[§bManhunt§8] §7Der Server stoppt in §b15 §7Sekunden!"));
 
         });
-        GameManager.bossBar.removeAll();
+        try {
+            GameManager.bossBar.removeAll();
+        } catch (Exception ignored) { }
         AnimationUtils.stopAnimation();
 
         BukkitRunnable endRunnable = getBukkitRunnable();
