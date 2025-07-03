@@ -47,9 +47,11 @@ public final class Manhunt extends JavaPlugin {
         logger = getLogger();
 
         // SET VOICECHAT PORT
-        int port = VoiceChat.findFreePortInRange(25000, 26000);
+        int port = System.getenv("SIMPLECLOUD_NUMERICAL_ID") != null
+                ? Integer.parseInt(System.getenv("SIMPLECLOUD_NUMERICAL_ID")) + 24454
+                : -1;
         if (port == -1) {
-            logger.warning("No free port found in range 25000-26000 for VoiceChat. Using default port 25565.");
+            logger.warning("No free port found for VoiceChat. Try using default port 25565.");
             port = 24454;
         }
         VoiceChat.setVoiceChatPort(port);
