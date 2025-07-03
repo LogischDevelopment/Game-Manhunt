@@ -15,6 +15,7 @@ import tv.logisch.manhunt.listener.*;
 import tv.logisch.manhunt.manager.GameManager;
 import tv.logisch.manhunt.objects.GameConfig;
 import tv.logisch.manhunt.utils.Config;
+import tv.logisch.manhunt.utils.VoiceChat;
 
 import java.io.File;
 import java.util.UUID;
@@ -36,10 +37,25 @@ public final class Manhunt extends JavaPlugin {
     @Accessors(fluent = true)
     private static LogiAPI logiAPI;
 
+    @Getter
+    @Accessors(fluent = true)
+    private static int voiceChatPort;
+
     @Override
     public void onLoad() {
         instance = this;
         logger = getLogger();
+
+        // SET VOICECHAT PORT
+        int port = VoiceChat.findFreePortInRange(25000, 26000);
+        if (port == -1) {
+            logger.warning("No free port found in range 25000-26000 for VoiceChat. Using default port 25565.");
+            port = 24454;
+        }
+        VoiceChat.setVoiceChatPort(port);
+        VoiceChat.allowUfwPort(port);
+        Manhunt.voiceChatPort = port;
+        System.setProperty("LOGISCH_VOICECHAT_PORT", String.valueOf(port));
     }
 
     @Override
@@ -90,5 +106,6 @@ public final class Manhunt extends JavaPlugin {
     @Override
     public void onDisable() {
         logger().info("Manhunt plugin disabled!");
+        VoiceChat.denyUfwPort(Manhunt.voiceChatPort());
     }
 }
