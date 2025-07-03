@@ -118,7 +118,6 @@ public class GameManager {
             player.sendMessage(Component.text("§8[§bManhunt§8] §7Der Server stoppt in §b15 §7Sekunden!"));
 
         });
-        Bukkit.getOnlinePlayers().forEach(GameManager.bossBar::removePlayer);
         GameManager.bossBar.removeAll();
         AnimationUtils.stopAnimation();
 
