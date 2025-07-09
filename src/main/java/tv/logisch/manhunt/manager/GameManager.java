@@ -161,6 +161,7 @@ public class GameManager {
 
     public static void removeRunner(UUID player) {
         runners.remove(player);
+        latestPositions.removeIf(l -> l.getPlayer().getUniqueId().equals(player));
     }
 
     public static void startCompassTracker() {
