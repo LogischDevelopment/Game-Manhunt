@@ -106,10 +106,6 @@ public class EventCommand implements CommandExecutor {
                 commandSender.sendMessage("§8[§bManhunt§8] §cDieser Befehl kann nur von einem Spieler ausgeführt werden!");
                 return true;
             }
-            if(!GameManager.state().equals(GameState.WAITING)) {
-                commandSender.sendMessage(Component.text("§8[§bManhunt§8] §cEvent Einstellungen können nur im Warte-Modus geändert werden!"));
-                return true;
-            }
             SettingGUI.get(player).open();
             commandSender.sendMessage(Component.text("§8[§bManhunt§8] §7Die Einstellungen wurden geöffnet!"));
         } else {

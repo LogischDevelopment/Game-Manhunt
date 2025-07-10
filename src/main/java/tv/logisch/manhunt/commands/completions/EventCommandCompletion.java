@@ -20,7 +20,7 @@ public class EventCommandCompletion implements TabCompleter {
             return List.of();
         }
         if(strings.length == 1) {
-            return Stream.of("start", "pause", "resume", "releaseTime", "runner").filter(w -> w.toLowerCase().startsWith(strings[0].toLowerCase())).toList();
+            return Stream.of("gui", "start", "pause", "resume", "releaseTime", "runner").filter(w -> w.toLowerCase().startsWith(strings[0].toLowerCase())).toList();
         }
         if(strings.length == 2) {
             if(strings[0].equalsIgnoreCase("runner")) {
