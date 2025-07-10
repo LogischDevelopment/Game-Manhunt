@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import tv.logisch.manhunt.enums.GameState;
+import tv.logisch.manhunt.guis.SettingGUI;
 import tv.logisch.manhunt.manager.GameManager;
 
 public class EventCommand implements CommandExecutor {
@@ -27,7 +28,8 @@ public class EventCommand implements CommandExecutor {
                     §8[§bManhunt§8] §7/event releaseTime <seconds>
                     §8[§bManhunt§8] §7/event runner <add/remove> <player>
                     §8[§bManhunt§8] §7/event pause
-                    §8[§bManhunt§8] §7/event resume""");
+                    §8[§bManhunt§8] §7/event resume
+                    §8[§bManhunt§8] §7/event gui""");
             return true;
         }
 
@@ -99,6 +101,17 @@ public class EventCommand implements CommandExecutor {
             }
             GameManager.resumeGame();
             commandSender.sendMessage(Component.text("§8[§bManhunt§8] §7Das Event wurde fortgesetzt!"));
+        } else if(subCommand.equalsIgnoreCase("gui")) {
+            if(!(commandSender instanceof Player player)) {
+                commandSender.sendMessage("§8[§bManhunt§8] §cDieser Befehl kann nur von einem Spieler ausgeführt werden!");
+                return true;
+            }
+            if(!GameManager.state().equals(GameState.WAITING)) {
+                commandSender.sendMessage(Component.text("§8[§bManhunt§8] §cEvent Einstellungen können nur im Warte-Modus geändert werden!"));
+                return true;
+            }
+            SettingGUI.get(player).open();
+            commandSender.sendMessage(Component.text("§8[§bManhunt§8] §7Die Einstellungen wurden geöffnet!"));
         } else {
             commandSender.sendMessage("""
                     §8[§bManhunt§8] §cUsage:
@@ -106,7 +119,8 @@ public class EventCommand implements CommandExecutor {
                     §8[§bManhunt§8] §7/event releaseTime <seconds>
                     §8[§bManhunt§8] §7/event runner <add/remove> <player>
                     §8[§bManhunt§8] §7/event pause
-                    §8[§bManhunt§8] §7/event resume""");
+                    §8[§bManhunt§8] §7/event resume
+                    §8[§bManhunt§8] §7/event gui""");
         }
 
         return true;
