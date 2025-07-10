@@ -7,6 +7,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tv.logisch.manhunt.manager.GameManager;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,7 +16,7 @@ public class EventCommandCompletion implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
 
-        if(!commandSender.hasPermission("logisch.manhunt.admin") && !strings[0].equalsIgnoreCase("runner")) {
+        if(!commandSender.hasPermission("logisch.manhunt.admin") && !GameManager.isHost(commandSender.getName())) {
             return List.of();
         }
         if(strings.length == 1) {
