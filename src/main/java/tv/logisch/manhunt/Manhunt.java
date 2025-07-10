@@ -89,6 +89,7 @@ public final class Manhunt extends JavaPlugin {
         pm.registerEvents(new BreakBlockListener(), this);
         pm.registerEvents(new PlaceBlockListener(), this);
         pm.registerEvents(new SettingGUIListener(), this);
+        pm.registerEvents(new BedBombListener(), this);
 
         PluginCommand eventCmd = getCommand("event");
         eventCmd.setExecutor(new EventCommand());
