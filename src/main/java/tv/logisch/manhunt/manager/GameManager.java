@@ -34,6 +34,9 @@ public class GameManager {
     private static long releaseTime = 300;
 
     @Getter @Setter @Accessors(fluent = true)
+    private static boolean keepInventory = false;
+
+    @Getter @Setter @Accessors(fluent = true)
     private static long time = 0;
 
     public static BossBar bossBar;
