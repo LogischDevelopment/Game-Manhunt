@@ -11,6 +11,7 @@ import tv.logisch.api.LogiAPI;
 import tv.logisch.manhunt.commands.CompassCommand;
 import tv.logisch.manhunt.commands.EventCommand;
 import tv.logisch.manhunt.commands.completions.EventCommandCompletion;
+import tv.logisch.manhunt.guis.SettingGUIListener;
 import tv.logisch.manhunt.listener.*;
 import tv.logisch.manhunt.manager.GameManager;
 import tv.logisch.manhunt.objects.GameConfig;
@@ -87,6 +88,7 @@ public final class Manhunt extends JavaPlugin {
         pm.registerEvents(new PlayerDamageListener(), this);
         pm.registerEvents(new BreakBlockListener(), this);
         pm.registerEvents(new PlaceBlockListener(), this);
+        pm.registerEvents(new SettingGUIListener(), this);
 
         PluginCommand eventCmd = getCommand("event");
         eventCmd.setExecutor(new EventCommand());
