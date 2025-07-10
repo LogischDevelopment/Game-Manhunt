@@ -18,6 +18,7 @@ public class PlayerDeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e) {
 
         e.deathMessage(Component.empty());
+        e.setKeepInventory(GameManager.keepInventory());
         if(GameManager.isRunner(e.getPlayer().getUniqueId())) {
 
             e.getPlayer().setGameMode(GameMode.SPECTATOR);
