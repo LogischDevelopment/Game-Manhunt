@@ -61,18 +61,16 @@ public class SettingGUI {
             this.inventory.setItem(i, stack);
         }
 
-        /* GAME DURATION */
-        stack = new ItemStack(Material.CLOCK, 1);
+        /* BED BOMB */
+        stack = new ItemStack(Material.RED_DYE, 1);
+        if(GameManager.bedBomb()) stack = new ItemStack(Material.GREEN_DYE, 1);
         stack.editMeta(meta -> {
-            meta.displayName(Component.text("§8» §7Game Duration"));
+            meta.displayName(Component.text("§8» §7Bed bomb"));
             List<Component> lore = new ArrayList<>();
-            lore.add(Component.text("§7Current: §f" + Format.time(GameManager.time())));
-            lore.add(Component.text("§fL-click§8: §7Decrease by 5 minute"));
-            lore.add(Component.text("§fR-click§8: §7Increase by 5 minute"));
-            lore.add(Component.text("§fShift + R-click§8: §7Increase by 10 minutes"));
-            lore.add(Component.text("§fShift + L-click§8: §7Decrease by 10 minutes"));
+            lore.add(Component.text("§7Current: §f" + (GameManager.bedBomb() ? "Enabled" : "Disabled")));
+            lore.add(Component.text("§fL-click§8: §7Toggle bed bomb"));
             meta.lore(lore);
-            meta.getPersistentDataContainer().set(new NamespacedKey("manhunt", "setting"), PersistentDataType.STRING, "game_duration");
+            meta.getPersistentDataContainer().set(new NamespacedKey("manhunt", "setting"), PersistentDataType.STRING, "bed_bomb");
         });
         this.inventory.setItem(20, stack);
 

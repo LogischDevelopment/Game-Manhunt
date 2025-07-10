@@ -35,6 +35,8 @@ public class GameManager {
 
     @Getter @Setter @Accessors(fluent = true)
     private static boolean keepInventory = false;
+    @Getter @Setter @Accessors(fluent = true)
+    private static boolean bedBomb = true;
 
     @Getter @Setter @Accessors(fluent = true)
     private static long time = 0;
