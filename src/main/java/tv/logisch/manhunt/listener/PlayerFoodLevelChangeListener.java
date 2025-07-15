@@ -10,7 +10,7 @@ public class PlayerFoodLevelChangeListener implements Listener {
 
     @EventHandler
     public void onPlayerFoodLevelChange(FoodLevelChangeEvent e) {
-        if(GameManager.state().equals(GameState.WAITING)) e.setCancelled(true);
+        if(!GameManager.state().equals(GameState.RUNNING)) e.setCancelled(true);
     }
 
 }

@@ -45,7 +45,7 @@ public class EventCommand implements CommandExecutor {
 
         } else if(subCommand.equalsIgnoreCase("releaseTime")) {
 
-            if(!Bukkit.hasWhitelist()) {
+            if(GameManager.released()) {
                 commandSender.sendMessage(Component.text("§8[§bManhunt§8] §cDie Hunter wurden bereits freigelassen!"));
                 return true;
             }

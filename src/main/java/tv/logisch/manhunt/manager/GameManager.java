@@ -10,7 +10,9 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import tv.logisch.manhunt.Manhunt;
@@ -41,6 +43,14 @@ public class GameManager {
     @Getter @Setter @Accessors(fluent = true)
     private static long time = 0;
 
+    @Getter @Setter @Accessors(fluent = true)
+    private static boolean released = false;
+
+    @Getter @Setter @Accessors(fluent = true)
+    private static World gameWorld;
+    @Getter @Setter @Accessors(fluent = true)
+    private static World waitingWorld;
+
     public static BossBar bossBar;
 
     public static List<LatestPositionObject> latestPositions = new ArrayList<>();
@@ -56,12 +66,19 @@ public class GameManager {
 
     public static void startGame() {
         if(state != GameState.WAITING) return;
+        Bukkit.setWhitelist(true);
         state = GameState.STARTING;
         releaseTime = totalReleaseTime;
         bossBar = Bukkit.createBossBar(Format.time(releaseTime), BarColor.BLUE, BarStyle.SOLID);
         bossBar.setProgress(1);
         bossBar.setVisible(true);
-        Bukkit.getOnlinePlayers().forEach(bossBar::addPlayer);
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            bossBar.addPlayer(p);
+            if(GameManager.isRunner(p.getUniqueId())) {
+                p.setGameMode(GameMode.SURVIVAL);
+                p.teleport(GameManager.gameWorld().getSpawnLocation());
+            }
+        });
         AnimationUtils.startAnimation();
 
         runnable = new BukkitRunnable() {
@@ -69,13 +86,25 @@ public class GameManager {
             public void run() {
                 if(GameManager.state().equals(GameState.RUNNING)) {
                     if(GameManager.releaseTime() == 1) {
-                        Bukkit.setWhitelist(false);
+                        Bukkit.setWhitelist(true);
+                        released = true;
                         Bukkit.getOnlinePlayers().forEach(player -> {
                             player.sendMessage("§8[§bManhunt§8] §7Die Hunter wurden freigelassen!");
                             player.playSound(player, Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
+
+                            if(!GameManager.isRunner(player.getUniqueId())) {
+                                player.setGameMode(GameMode.SURVIVAL);
+                                player.teleport(GameManager.gameWorld().getSpawnLocation());
+                                ItemStack compass = new ItemStack(Material.COMPASS);
+                                ItemMeta meta = compass.getItemMeta();
+                                meta.displayName(Component.text("§8» §bTracker"));
+                                compass.setItemMeta(meta);
+                                player.getInventory().addItem(compass);
+                            }
                         });
                         GameManager.startCompassTracker();
 
+                        Bukkit.setWhitelist(false);
                         Player host = GameManager.getHost();
                         Velocity.sendToVelocity(host, "executeCommand:joinme:"+host.getUniqueId());
                     }
@@ -88,6 +117,7 @@ public class GameManager {
         runnable.runTaskTimer(Manhunt.instance(), 20, 20);
 
         state = GameState.RUNNING;
+        Bukkit.setWhitelist(false);
         Bukkit.getServerTickManager().setFrozen(false);
 
     }

@@ -15,9 +15,13 @@ public class PlayerSwitchWorld implements Listener {
 
     @EventHandler
     public void onPlayerWorldChange(PlayerChangedWorldEvent e) {
-
         Player p = e.getPlayer();
+        if(e.getFrom().equals(GameManager.waitingWorld())) return;
         if(!p.getGameMode().equals(GameMode.SURVIVAL)) return;
+        if(p.getWorld().getName().equalsIgnoreCase("waiting")) {
+            p.teleport(GameManager.gameWorld().getSpawnLocation());
+            return;
+        }
         Bukkit.getOnlinePlayers().forEach(pl -> {
             pl.sendMessage(Component.text("§8[§b❉§8] §7" + p.getName() + " §fentered the world §b" + p.getWorld().getName()));
         });

@@ -18,6 +18,14 @@ public class PlayerMoveListener implements Listener {
             e.getPlayer().sendActionBar(Component.text("§7§lEvent §c§lpausiert§r§8: §7Du kannst dich §c§nnicht§r§7 bewegen!"));
         }
 
+        if(GameManager.state().equals(GameState.WAITING) && e.getTo().getY() < 50) {
+            e.setTo(e.getPlayer().getWorld().getSpawnLocation());
+            return;
+        }
+        if(!GameManager.released() && !GameManager.isRunner(e.getPlayer().getUniqueId()) && e.getTo().getY() < 50) {
+            e.setTo(e.getPlayer().getWorld().getSpawnLocation());
+        }
+
     }
 
 }
