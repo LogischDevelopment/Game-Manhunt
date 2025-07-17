@@ -29,7 +29,11 @@ public class JoinListener implements Listener {
 
         if(GameManager.state().equals(GameState.WAITING)) {
             p.setGameMode(GameMode.ADVENTURE);
-            p.teleport(GameManager.waitingWorld().getSpawnLocation());
+            if(GameManager.isRunner(e.getPlayer().getUniqueId())) {
+                p.teleport(GameManager.gameWorld().getSpawnLocation());
+            } else {
+                p.teleport(GameManager.waitingWorld().getSpawnLocation());
+            }
             return;
         }
 
@@ -39,6 +43,10 @@ public class JoinListener implements Listener {
                 p.teleport(GameManager.waitingWorld().getSpawnLocation());
             }
             return;
+        }
+
+        if(!p.getLocation().getWorld().equals(GameManager.waitingWorld())) {
+            p.teleport(GameManager.gameWorld().getSpawnLocation());
         }
 
         if(!GameManager.isRunner(e.getPlayer().getUniqueId())) {
