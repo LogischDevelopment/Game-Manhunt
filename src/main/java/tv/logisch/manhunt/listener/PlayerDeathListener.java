@@ -1,6 +1,7 @@
 package tv.logisch.manhunt.listener;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -20,7 +21,7 @@ public class PlayerDeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e) {
 
         Component dMessage = e.deathMessage();
-        String msg = dMessage == null ? e.getPlayer().getName() + " ist aus unbekannten Grund gestorben." : PlainTextComponentSerializer.plainText().serialize(dMessage);
+        String msg = dMessage == null ? "§7"+e.getPlayer().getName() + " ist aus unbekannten Grund gestorben." : "§7"+PlainTextComponentSerializer.plainText().serialize(dMessage.color(TextColor.fromHexString("#AAAAAA")));
         e.deathMessage(Component.empty());
         e.setKeepInventory(GameManager.keepInventory());
         if(GameManager.isRunner(e.getPlayer().getUniqueId())) {
