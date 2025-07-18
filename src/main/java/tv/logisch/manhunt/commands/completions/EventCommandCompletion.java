@@ -2,6 +2,7 @@ package tv.logisch.manhunt.commands.completions;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import io.papermc.paper.ban.BanListType;
+import org.bukkit.BanEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -33,11 +34,14 @@ public class EventCommandCompletion implements TabCompleter {
                 return Stream.of("120", "180", "240", "300", "360", "420", "480", "540", "600").filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase())).toList();
             }
             if(strings[0].equalsIgnoreCase("kick") || strings[0].equalsIgnoreCase("ban")) {
-                return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase())).toList();
+                return Bukkit.getOnlinePlayers().stream().map(Player::getName)
+                        .filter(w -> !w.equals(commandSender.getName()))
+                        .filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase()))
+                        .toList();
             }
             if(strings[0].equalsIgnoreCase("unban")) {
                 return Bukkit.getServer().getBanList(BanListType.PROFILE).getEntries().stream()
-                        .map(entry -> ((PlayerProfile) entry).getName())
+                        .map(entry -> ((PlayerProfile) entry.getBanTarget()).getName())
                         .filter(Objects::nonNull)
                         .filter(name -> name.toLowerCase().startsWith(strings[1].toLowerCase()))
                         .toList();
@@ -46,7 +50,10 @@ public class EventCommandCompletion implements TabCompleter {
         }
         if(strings.length == 3) {
             if(strings[0].equalsIgnoreCase("runner")) {
-                return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(w -> w.toLowerCase().startsWith(strings[2].toLowerCase())).toList();
+                return Bukkit.getOnlinePlayers().stream().map(Player::getName)
+                        .filter(w -> !w.equals(commandSender.getName()))
+                        .filter(w -> w.toLowerCase().startsWith(strings[2].toLowerCase()))
+                        .toList();
             }
         }
         return List.of();
