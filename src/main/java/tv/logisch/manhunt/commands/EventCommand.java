@@ -122,6 +122,10 @@ public class EventCommand implements CommandExecutor {
                 return true;
             }
             String playerName = strings[1];
+            if(playerName.equalsIgnoreCase(commandSender.getName())) {
+                commandSender.sendMessage(Manhunt.prefix() + "§cDu kannst dich nicht selbst kicken!");
+                return true;
+            }
             Player targetPlayer = Bukkit.getPlayer(playerName);
             if(targetPlayer == null || !targetPlayer.isOnline()) {
                 commandSender.sendMessage(Manhunt.prefix() + "§cSpieler §8(§7" + playerName + "§8) §cnicht gefunden!");
@@ -136,6 +140,10 @@ public class EventCommand implements CommandExecutor {
                 return true;
             }
             String playerName = strings[1];
+            if(playerName.equalsIgnoreCase(commandSender.getName())) {
+                commandSender.sendMessage(Manhunt.prefix() + "§cDu kannst dich nicht selbst bannen!");
+                return true;
+            }
             Player targetPlayer = Bukkit.getPlayer(playerName);
             if(targetPlayer == null || !targetPlayer.isOnline()) {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
