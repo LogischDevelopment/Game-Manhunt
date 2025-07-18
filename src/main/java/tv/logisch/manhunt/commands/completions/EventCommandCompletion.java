@@ -20,14 +20,17 @@ public class EventCommandCompletion implements TabCompleter {
             return List.of();
         }
         if(strings.length == 1) {
-            return Stream.of("gui", "start", "pause", "resume", "releaseTime", "runner").filter(w -> w.toLowerCase().startsWith(strings[0].toLowerCase())).toList();
+            return Stream.of("gui", "start", "pause", "resume", "releaseTime", "runner", "kick", "ban", "unban").filter(w -> w.toLowerCase().startsWith(strings[0].toLowerCase())).toList();
         }
         if(strings.length == 2) {
             if(strings[0].equalsIgnoreCase("runner")) {
                 return Stream.of("add", "remove").filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase())).toList();
             }
             if(strings[0].equalsIgnoreCase("releaseTime")) {
-                return Stream.of("60", "120", "180", "240", "300", "360", "420", "480", "540", "600").filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase())).toList();
+                return Stream.of("120", "180", "240", "300", "360", "420", "480", "540", "600").filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase())).toList();
+            }
+            if(strings[0].equalsIgnoreCase("kick") || strings[0].equalsIgnoreCase("ban") || strings[0].equalsIgnoreCase("unban")) {
+                return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase())).toList();
             }
             return List.of();
         }
