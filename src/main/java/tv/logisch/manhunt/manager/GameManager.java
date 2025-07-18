@@ -89,7 +89,7 @@ public class GameManager {
                         Bukkit.setWhitelist(true);
                         released = true;
                         Bukkit.getOnlinePlayers().forEach(player -> {
-                            player.sendMessage("§8[§bManhunt§8] §7Die Hunter wurden freigelassen!");
+                            player.sendMessage(Manhunt.prefix() + "§7Die Hunter wurden freigelassen!");
                             player.playSound(player, Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
 
                             if(!GameManager.isRunner(player.getUniqueId())) {
@@ -136,21 +136,21 @@ public class GameManager {
         state = GameState.ENDING;
         long time = GameManager.time();
         Bukkit.getOnlinePlayers().forEach(player -> {
-            player.sendMessage("§8[§bManhunt§8] §7Das Spiel ist vorbei!");
-            player.sendMessage(Component.text("§8[§bManhunt§8] §7Die Zeit: §b" + Format.time(time)));
+            player.sendMessage(Manhunt.prefix() + "§7Das Spiel ist vorbei!");
+            player.sendMessage(Component.text(Manhunt.prefix() + "§7Die Zeit: §b" + Format.time(time)));
             player.playSound(player, Sound.ENTITY_ENDER_DRAGON_DEATH, 1, 1);
 
             if(runnerFinished) {
-                player.sendMessage("§8[§bManhunt§8] §aDie Runner haben gewonnen!");
+                player.sendMessage(Manhunt.prefix() + "§aDie Runner haben gewonnen!");
                 player.sendTitlePart(TitlePart.TITLE, Component.text("§aDie Runner haben gewonnen!"));
                 player.sendTitlePart(TitlePart.SUBTITLE, Component.text("§b" + Format.time(time)));
             } else {
-                player.sendMessage("§8[§bManhunt§8] §cDie Hunter haben gewonnen!");
+                player.sendMessage(Manhunt.prefix() + "§cDie Hunter haben gewonnen!");
                 player.sendTitlePart(TitlePart.TITLE, Component.text("§cDie Hunter haben gewonnen!"));
                 player.sendTitlePart(TitlePart.SUBTITLE, Component.text("§b" + Format.time(time)));
             }
             player.setGameMode(GameMode.SPECTATOR);
-            player.sendMessage(Component.text("§8[§bManhunt§8] §7Der Server stoppt in §b15 §7Sekunden!"));
+            player.sendMessage(Component.text(Manhunt.prefix() + "§7Der Server stoppt in §b15 §7Sekunden!"));
 
         });
         try {
@@ -175,7 +175,7 @@ public class GameManager {
                 }
                 Bukkit.getOnlinePlayers().forEach(player -> {
                     if(seconds[0] == 5 || seconds[0] <= 3) {
-                        player.sendMessage(Component.text("§8[§bManhunt§8] §7Der Server stoppt in §b" + seconds[0] + " §7Sekunden!"));
+                        player.sendMessage(Component.text(Manhunt.prefix() + "§7Der Server stoppt in §b" + seconds[0] + " §7Sekunden!"));
                         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
                     }
                 });
@@ -237,7 +237,7 @@ public class GameManager {
                             }
                         });
                         if(closest.get() == null) {
-                            player.sendMessage("§8[§bManhunt§8] §7Es wurde kein Spieler zum tracken gefunden!");
+                            player.sendMessage(Manhunt.prefix() + "§7Es wurde kein Spieler zum tracken gefunden!");
                             return;
                         }
                     }

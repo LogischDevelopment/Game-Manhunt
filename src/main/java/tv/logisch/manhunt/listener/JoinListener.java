@@ -24,7 +24,7 @@ public class JoinListener implements Listener {
 
         String role = GameManager.isRunner(e.getPlayer().getUniqueId()) ? "§aRunner" : "§cHunter";
         Bukkit.getOnlinePlayers().forEach(target -> {
-            target.sendMessage(Component.text("§8[§a+§8] §7" + p.getName() + " §8(§7" + role + "§8)"));
+            target.sendMessage(Component.text("§a§lJOIN §8» §7" + p.getName() + " §8(§7" + role + "§8)"));
         });
 
         if(GameManager.state().equals(GameState.WAITING)) {

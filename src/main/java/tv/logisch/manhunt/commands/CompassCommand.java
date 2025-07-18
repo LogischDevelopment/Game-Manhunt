@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.manager.GameManager;
 
 public class CompassCommand implements CommandExecutor {
@@ -22,8 +23,8 @@ public class CompassCommand implements CommandExecutor {
         compass.setItemMeta(meta);
         player.getInventory().addItem(compass);
 
-        player.sendMessage("§8[§bManhunt§8] §7You have received a tracker!");
-        player.sendMessage("§8[§bManhunt§8] §7In less than 30 seconds, the tracker will point to the nearest runner!");
+        player.sendMessage(Manhunt.prefix() + "§7You have received a tracker!");
+        player.sendMessage(Manhunt.prefix() + "§7In less than 30 seconds, the tracker will point to the nearest runner!");
         return true;
 
     }

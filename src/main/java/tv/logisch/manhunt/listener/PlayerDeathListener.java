@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.enums.GameState;
 import tv.logisch.manhunt.manager.GameManager;
 
@@ -27,7 +28,7 @@ public class PlayerDeathListener implements Listener {
         if(GameManager.isRunner(e.getPlayer().getUniqueId())) {
 
             e.getPlayer().setGameMode(GameMode.SPECTATOR);
-            e.getPlayer().sendMessage(Component.text("§8[§bManhunt§8] §cDu bist ausgeschieden!"));
+            e.getPlayer().sendMessage(Component.text(Manhunt.prefix() + "§cDu bist ausgeschieden!"));
             GameManager.latestPositions.removeIf(latestPosition -> latestPosition.getPlayer().getUniqueId().equals(e.getPlayer().getUniqueId()));
             Bukkit.getOnlinePlayers().forEach(p -> {
                 p.sendMessage(Component.text("§8[§c†§8] §7" + e.getPlayer().getName()));
@@ -52,7 +53,7 @@ public class PlayerDeathListener implements Listener {
             }
             e.getPlayer().teleport(respawn);
             Bukkit.getOnlinePlayers().forEach(p -> {
-                p.sendMessage(Component.text("§8[§c†§8] §7"+ msg));
+                p.sendMessage(Component.text("§c§lDEATH §8» §7"+ msg));
             });
 
         }

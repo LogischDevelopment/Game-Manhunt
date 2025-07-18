@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.manager.GameManager;
 
 public class BedBombListener implements Listener {
@@ -23,7 +24,7 @@ public class BedBombListener implements Listener {
         World.Environment env = block.getWorld().getEnvironment();
         if (env == World.Environment.NETHER || env == World.Environment.THE_END) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage(Component.text("§8[§bManhunt§8] §cThe host has disabled bed bombs in this game!"));
+            e.getPlayer().sendMessage(Component.text(Manhunt.prefix() + "§cThe host has disabled bed bombs in this game!"));
         }
 
     }
