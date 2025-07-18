@@ -1,5 +1,7 @@
 package tv.logisch.manhunt.commands.completions;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import io.papermc.paper.ban.BanListType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -10,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import tv.logisch.manhunt.manager.GameManager;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class EventCommandCompletion implements TabCompleter {
@@ -29,8 +32,15 @@ public class EventCommandCompletion implements TabCompleter {
             if(strings[0].equalsIgnoreCase("releaseTime")) {
                 return Stream.of("120", "180", "240", "300", "360", "420", "480", "540", "600").filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase())).toList();
             }
-            if(strings[0].equalsIgnoreCase("kick") || strings[0].equalsIgnoreCase("ban") || strings[0].equalsIgnoreCase("unban")) {
+            if(strings[0].equalsIgnoreCase("kick") || strings[0].equalsIgnoreCase("ban")) {
                 return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(w -> w.toLowerCase().startsWith(strings[1].toLowerCase())).toList();
+            }
+            if(strings[0].equalsIgnoreCase("unban")) {
+                return Bukkit.getServer().getBanList(BanListType.PROFILE).getEntries().stream()
+                        .map(entry -> ((PlayerProfile) entry).getName())
+                        .filter(Objects::nonNull)
+                        .filter(name -> name.toLowerCase().startsWith(strings[1].toLowerCase()))
+                        .toList();
             }
             return List.of();
         }
