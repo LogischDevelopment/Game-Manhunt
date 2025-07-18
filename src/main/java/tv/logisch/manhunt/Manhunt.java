@@ -97,16 +97,16 @@ public final class Manhunt extends JavaPlugin {
         eventCmd.setTabCompleter(new EventCommandCompletion());
         getCommand("compass").setExecutor(new CompassCommand());
 
-        Bukkit.getWorlds().forEach(w -> {
-            w.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-        });
-
         Bukkit.getServerTickManager().setFrozen(true);
 
         GameManager.addRunner(gameConfig.hostUUID());
 
         GameManager.gameWorld(Bukkit.createWorld(new WorldCreator("world")));
         GameManager.waitingWorld(Bukkit.createWorld(new WorldCreator("waiting")));
+
+        Bukkit.getWorlds().forEach(w -> {
+            w.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        });
 
     }
 
