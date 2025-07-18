@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tv.logisch.api.LogiAPI;
 import tv.logisch.manhunt.commands.CompassCommand;
 import tv.logisch.manhunt.commands.EventCommand;
+import tv.logisch.manhunt.commands.Settings;
 import tv.logisch.manhunt.commands.completions.EventCommandCompletion;
 import tv.logisch.manhunt.guis.SettingGUIListener;
 import tv.logisch.manhunt.listener.*;
@@ -42,6 +43,10 @@ public final class Manhunt extends JavaPlugin {
     @Getter
     @Accessors(fluent = true)
     private static int voiceChatPort;
+
+    @Getter
+    @Accessors(fluent = true)
+    private static String prefix = "§b§lMANHUNT §8» §7";
 
     @Override
     public void onLoad() {
@@ -96,6 +101,7 @@ public final class Manhunt extends JavaPlugin {
         eventCmd.setExecutor(new EventCommand());
         eventCmd.setTabCompleter(new EventCommandCompletion());
         getCommand("compass").setExecutor(new CompassCommand());
+        getCommand("settings").setExecutor(new Settings());
 
         Bukkit.getServerTickManager().setFrozen(true);
 

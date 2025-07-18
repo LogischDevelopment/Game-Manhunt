@@ -8,3 +8,5 @@ commands:
     description: Manage the event
   compass:
     description: Get the compass
+  settings:
+    description: Show or change settings
