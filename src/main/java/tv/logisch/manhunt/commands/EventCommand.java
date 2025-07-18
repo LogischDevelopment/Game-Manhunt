@@ -1,5 +1,6 @@
 package tv.logisch.manhunt.commands;
 
+import io.papermc.paper.ban.BanListType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -12,6 +13,8 @@ import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.enums.GameState;
 import tv.logisch.manhunt.guis.SettingGUI;
 import tv.logisch.manhunt.manager.GameManager;
+
+import java.time.Duration;
 
 public class EventCommand implements CommandExecutor {
     @Override
@@ -30,7 +33,11 @@ public class EventCommand implements CommandExecutor {
                     {prefix} §7/event runner <add/remove> <player>
                     {prefix} §7/event pause
                     {prefix} §7/event resume
-                    {prefix} §7/event gui""".replaceAll("\\{prefix}", Manhunt.prefix()));
+                    {prefix} §7/event gui
+                    {prefix} §7/event kick <user>
+                    {prefix} §7/event ban <user>
+                    {prefix} §7/event unban <user>"""
+                    .replaceAll("\\{prefix}", Manhunt.prefix()));
             return true;
         }
 
@@ -109,6 +116,52 @@ public class EventCommand implements CommandExecutor {
             }
             SettingGUI.get(player).open();
             commandSender.sendMessage(Component.text(Manhunt.prefix() + "§7Die Einstellungen wurden geöffnet!"));
+        } else if(subCommand.equalsIgnoreCase("kick")) {
+            if(strings.length != 2) {
+                commandSender.sendMessage(Manhunt.prefix() + "§cUsage: /event kick <user>");
+                return true;
+            }
+            String playerName = strings[1];
+            Player targetPlayer = Bukkit.getPlayer(playerName);
+            if(targetPlayer == null || !targetPlayer.isOnline()) {
+                commandSender.sendMessage(Manhunt.prefix() + "§cSpieler §8(§7" + playerName + "§8) §cnicht gefunden!");
+                return true;
+            }
+
+            targetPlayer.kick(Component.text(Manhunt.prefix() + "§cDu wurdest aus dem Event gekickt!"));
+            commandSender.sendMessage(Manhunt.prefix() + "§7" + targetPlayer.getName() + " §8("+(GameManager.isRunner(targetPlayer.getUniqueId()) ? "§aRunner" : "§cHunter")+"§8) §7wurde aus dem Event gekickt!");
+        } else if(subCommand.equalsIgnoreCase("ban")) {
+            if(strings.length != 2) {
+                commandSender.sendMessage(Manhunt.prefix() + "§cUsage: /event ban <user>");
+                return true;
+            }
+            String playerName = strings[1];
+            Player targetPlayer = Bukkit.getPlayer(playerName);
+            if(targetPlayer == null || !targetPlayer.isOnline()) {
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
+                if(offlinePlayer.isBanned()) {
+                    commandSender.sendMessage(Manhunt.prefix() + "§cSpieler §8(§7" + playerName + "§8) §cist bereits gebannt!");
+                    return true;
+                }
+                offlinePlayer.ban("Du wurdest aus dem Event gebannt!", Duration.ofDays(365), null);
+                commandSender.sendMessage(Manhunt.prefix() + "§cSpieler §8(§7" + playerName + "§8) §cwurde aus dem Event gebannt!");
+                return true;
+            }
+            targetPlayer.ban(Manhunt.prefix() + "§cDu wurdest aus dem Event gekickt!", Duration.ofDays(365), null, true);
+            commandSender.sendMessage(Manhunt.prefix() + "§7" + targetPlayer.getName() + " §8("+(GameManager.isRunner(targetPlayer.getUniqueId()) ? "§aRunner" : "§cHunter")+"§8) §7wurde aus dem Event gebannt!");
+        } else if(subCommand.equalsIgnoreCase("unban")) {
+            if (strings.length != 2) {
+                commandSender.sendMessage(Manhunt.prefix() + "§cUsage: /event unban <user>");
+                return true;
+            }
+            String playerName = strings[1];
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
+            if (!offlinePlayer.isBanned()) {
+                commandSender.sendMessage(Manhunt.prefix() + "§cSpieler §8(§7" + playerName + "§8) §cist nicht gebannt!");
+                return true;
+            }
+            Bukkit.getServer().getBanList(BanListType.PROFILE).pardon(offlinePlayer.getPlayerProfile());
+            commandSender.sendMessage(Manhunt.prefix() + "§cSpieler §8(§7" + playerName + "§8) §cwurde für das Event entbannt!");
         } else {
             commandSender.sendMessage("""
                     {prefix} §cUsage:
@@ -117,9 +170,12 @@ public class EventCommand implements CommandExecutor {
                     {prefix} §7/event runner <add/remove> <player>
                     {prefix} §7/event pause
                     {prefix} §7/event resume
-                    {prefix} §7/event gui""".replaceAll("\\{prefix}", Manhunt.prefix()));
+                    {prefix} §7/event gui
+                    {prefix} §7/event kick <user>
+                    {prefix} §7/event ban <user>
+                    {prefix} §7/event unban <user>"""
+                    .replaceAll("\\{prefix}", Manhunt.prefix()));
         }
-
         return true;
 
     }
