@@ -41,6 +41,11 @@ public class SettingGUIListener implements Listener {
         if(!SettingGUI.has(p)) return;
 
         e.setCancelled(true);
+
+        if(!p.hasPermission("logisch.manhunt.admin") && !GameManager.isHost(p.getName())) {
+            return;
+        }
+
         ItemStack clicked = e.getCurrentItem();
         NamespacedKey key = new NamespacedKey("manhunt", "setting");
         if(clicked.getItemMeta() == null || !clicked.getItemMeta().getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
