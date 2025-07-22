@@ -24,7 +24,7 @@ public class PlayerSwitchWorld implements Listener {
         }
         String worldDimension = p.getWorld().getEnvironment() == org.bukkit.World.Environment.NORMAL ? "§aOverworld" : p.getWorld().getEnvironment() == org.bukkit.World.Environment.NETHER ? "§cNether" : "§dEnd";
         Bukkit.getOnlinePlayers().forEach(pl -> {
-            pl.sendMessage(Component.text("§f§lWORLD §8» §7" + p.getName() + " §fentered the dimension " + worldDimension + "§7."));
+            pl.sendMessage(Component.text("§f§lWORLD §8» §f" + p.getName() + " §7entered the dimension " + worldDimension + "§7."));
         });
 
     }
