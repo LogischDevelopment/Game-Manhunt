@@ -45,7 +45,7 @@ public class JoinListener implements Listener {
             return;
         }
 
-        if(!p.getLocation().getWorld().equals(GameManager.waitingWorld())) {
+        if(p.getLocation().getWorld().equals(GameManager.waitingWorld())) {
             p.teleport(GameManager.gameWorld().getSpawnLocation());
         }
 
