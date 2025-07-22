@@ -41,6 +41,11 @@ public class JoinListener implements Listener {
             if(!GameManager.isRunner(e.getPlayer().getUniqueId())) {
                 e.getPlayer().setGameMode(GameMode.ADVENTURE);
                 p.teleport(GameManager.waitingWorld().getSpawnLocation());
+            } else {
+                if(e.getPlayer().getWorld().equals(GameManager.waitingWorld())) {
+                    p.teleport(GameManager.gameWorld().getSpawnLocation());
+                    e.getPlayer().setGameMode(GameMode.SURVIVAL);
+                }
             }
             return;
         }
