@@ -3,17 +3,20 @@ package tv.logisch.manhunt.listener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scoreboard.Team;
 import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.enums.GameState;
 import tv.logisch.manhunt.manager.GameManager;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class PlayerDeathListener implements Listener {
@@ -21,8 +24,7 @@ public class PlayerDeathListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
 
-        Component dMessage = e.deathMessage();
-        String msg = dMessage == null ? "§7"+e.getPlayer().getName() + " ist aus unbekannten Grund gestorben." : "§7"+PlainTextComponentSerializer.plainText().serialize(dMessage.color(TextColor.fromHexString("#AAAAAA")));
+        String msg = getDeathMessage(e);
         e.deathMessage(Component.empty());
         e.setKeepInventory(GameManager.keepInventory());
         if(GameManager.isRunner(e.getPlayer().getUniqueId())) {
@@ -31,7 +33,7 @@ public class PlayerDeathListener implements Listener {
             e.getPlayer().sendMessage(Component.text(Manhunt.prefix() + "§cDu bist ausgeschieden!"));
             GameManager.latestPositions.removeIf(latestPosition -> latestPosition.getPlayer().getUniqueId().equals(e.getPlayer().getUniqueId()));
             Bukkit.getOnlinePlayers().forEach(p -> {
-                p.sendMessage(Component.text("§8[§c†§8] §7" + e.getPlayer().getName()));
+                p.sendMessage(Component.text("§c§lDEATH §8» §7" + msg));
             });
 
             for(UUID playerUuid : GameManager.getRunners()) {
@@ -57,6 +59,38 @@ public class PlayerDeathListener implements Listener {
             });
 
         }
+
+    }
+
+    private static String getDeathMessage(PlayerDeathEvent e) {
+        Component dMessage = e.deathMessage();
+        if (dMessage == null) {
+            return "§f" + e.getPlayer().getName() + "§7 ist aus unbekannten Grund gestorben.";
+        }
+        String message = PlainTextComponentSerializer.plainText().serialize(dMessage);
+
+        Team team = e.getEntity().getScoreboard().getEntryTeam(e.getEntity().getName());
+        TextColor teamColor = team != null ? team.color() : TextColor.fromHexString("#AAAAAA");
+        String customName = "§"+teamColor.asHexString().toUpperCase().charAt(0) + e.getPlayer().getName() + "§7";
+        String displayName = e.getEntity().getScoreboard().getEntryTeam(e.getEntity().getName()) != null
+                ? PlainTextComponentSerializer.plainText().serialize(Objects.requireNonNull(e.getEntity().getScoreboard().getEntryTeam(e.getEntity().getName())).prefix())  + e.getEntity().getName()
+                : e.getEntity().getName();
+        message = message.replaceAll(displayName, customName);
+
+        Entity killer = e.getDamageSource().getCausingEntity();
+        if(killer != null) {
+            String killerName = killer.getName();
+            if(killer instanceof Player k) {
+                Team killerTeam = k.getScoreboard().getEntryTeam(k.getName());
+                TextColor killerTeamColor = killerTeam != null ? killerTeam.color() : TextColor.fromHexString("#AAAAAA");
+                String killerCustomName = "§"+killerTeamColor.asHexString().toUpperCase().charAt(0) + killerName + "§7";
+                message = message.replaceAll(killerName, killerCustomName);
+            } else {
+                message = message.replaceAll(killerName, "§f" + killerName + "§7");
+            }
+        }
+
+        return message;
 
     }
 
