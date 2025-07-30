@@ -1,0 +1,8 @@
+name: Manhunt
+version: '1.0-SNAPSHOT'
+main: tv.logisch.manhunt.Manhunt
+api-version: '1.21'
+authors: [Teekqu]
+description: Plugin for Logisch.tv Network
+website: https://www.logisch.tv/
+folia-supported: true
