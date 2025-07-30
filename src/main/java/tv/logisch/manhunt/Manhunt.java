@@ -1,18 +1,18 @@
 package tv.logisch.manhunt;
 
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.WorldCreator;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import tv.logisch.api.LogiAPI;
 import tv.logisch.manhunt.commands.CompassCommand;
 import tv.logisch.manhunt.commands.EventCommand;
-import tv.logisch.manhunt.commands.Settings;
-import tv.logisch.manhunt.commands.completions.EventCommandCompletion;
+import tv.logisch.manhunt.commands.SettingsCommand;
 import tv.logisch.manhunt.guis.SettingGUIListener;
 import tv.logisch.manhunt.listener.*;
 import tv.logisch.manhunt.manager.GameManager;
@@ -21,7 +21,6 @@ import tv.logisch.manhunt.utils.Config;
 import tv.logisch.manhunt.utils.VoiceChat;
 
 import java.io.File;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class Manhunt extends JavaPlugin {
@@ -97,11 +96,13 @@ public final class Manhunt extends JavaPlugin {
         pm.registerEvents(new SettingGUIListener(), this);
         pm.registerEvents(new BedBombListener(), this);
 
-        PluginCommand eventCmd = getCommand("event");
-        eventCmd.setExecutor(new EventCommand());
-        eventCmd.setTabCompleter(new EventCommandCompletion());
-        getCommand("compass").setExecutor(new CompassCommand());
-        getCommand("settings").setExecutor(new Settings());
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, (event) -> {
+            Commands registrar = event.registrar();
+
+            registrar.register("compass", new CompassCommand());
+            registrar.register("event", new EventCommand());
+            registrar.register("settings", new SettingsCommand());
+        });
 
         Bukkit.getServerTickManager().setFrozen(true);
 
