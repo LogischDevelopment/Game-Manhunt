@@ -95,6 +95,8 @@ public class GameManager {
                             if(!GameManager.isRunner(player.getUniqueId())) {
                                 player.setGameMode(GameMode.SURVIVAL);
                                 player.teleport(GameManager.gameWorld().getSpawnLocation());
+                                player.getInventory().clear();
+                                player.getActivePotionEffects().forEach(p -> player.removePotionEffect(p.getType()));
                                 ItemStack compass = new ItemStack(Material.COMPASS);
                                 ItemMeta meta = compass.getItemMeta();
                                 meta.displayName(Component.text("§8» §bTracker"));
