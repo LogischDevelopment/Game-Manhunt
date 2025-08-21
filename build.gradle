@@ -9,8 +9,8 @@ version = '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
     maven {
-        name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
+        name = "papermc"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
     maven {
         name = "sonatype"
@@ -18,20 +18,12 @@ repositories {
     }
     maven {
         name = "devload"
-        url = "https://nexus.devload.eu/repository/maven-releases/"
-    }
-    maven {
-        name = "simplecloud"
-        url = "https://repo.simplecloud.app/snapshots"
-    }
-    maven {
-        name = "buf"
-        url = "https://buf.build/gen/maven"
+        url = "https://repo.devload.eu/releases"
     }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     implementation("org.json:json:20240303")
 
     // lombok
@@ -39,7 +31,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.34")
 
     // Logisch API
-    implementation("tv.logisch:LogiAPIClient:1.5.1")
+    implementation("tv.logisch:LogiAPIClient:1.7.1")
 }
 
 def targetJavaVersion = 21
