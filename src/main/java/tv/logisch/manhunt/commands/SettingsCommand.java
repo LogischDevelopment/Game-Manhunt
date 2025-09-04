@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.Nullable;
 import tv.logisch.manhunt.Manhunt;
 import tv.logisch.manhunt.guis.SettingGUI;
-import tv.logisch.manhunt.manager.GameManager;
 
 import java.util.Collection;
 import java.util.List;
