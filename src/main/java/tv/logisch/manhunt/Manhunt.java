@@ -114,6 +114,8 @@ public final class Manhunt extends JavaPlugin {
         Bukkit.getWorlds().forEach(w -> {
             w.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
             w.setGameRule(GameRule.LOCATOR_BAR, false);
+            w.setGameRule(GameRule.SPAWN_RADIUS, 0);
+            w.setGameRule(GameRule.SPAWN_CHUNK_RADIUS, 0);
         });
 
     }
