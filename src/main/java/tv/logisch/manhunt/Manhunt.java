@@ -95,6 +95,7 @@ public final class Manhunt extends JavaPlugin {
         pm.registerEvents(new PlaceBlockListener(), this);
         pm.registerEvents(new SettingGUIListener(), this);
         pm.registerEvents(new BedBombListener(), this);
+        pm.registerEvents(new VehicleMoveListener(), this);
 
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, (event) -> {
             Commands registrar = event.registrar();
