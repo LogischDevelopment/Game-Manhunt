@@ -22,10 +22,6 @@ public class SettingsCommand implements BasicCommand {
             sender.sendMessage(Manhunt.prefix() + "§cDieser Befehl kann nur von einem Spieler ausgeführt werden!");
             return;
         }
-        if(!GameManager.isHost(sender.getName()) && !sender.hasPermission("logisch.manhunt.admin")) {
-            sender.sendMessage("§cYou do not have permission to use this command.");
-            return;
-        }
 
         SettingGUI.get(p).open();
         sender.sendMessage(Component.text(Manhunt.prefix() + "§7Die Einstellungen wurden geöffnet!"));
