@@ -9,6 +9,7 @@ import org.bukkit.GameRule;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.w3c.dom.stylesheets.LinkStyle;
 import tv.logisch.api.LogiAPI;
 import tv.logisch.manhunt.commands.CompassCommand;
 import tv.logisch.manhunt.commands.EventCommand;
@@ -21,6 +22,8 @@ import tv.logisch.manhunt.utils.Config;
 import tv.logisch.manhunt.utils.VoiceChat;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.logging.Logger;
 
 public final class Manhunt extends JavaPlugin {
@@ -64,6 +67,24 @@ public final class Manhunt extends JavaPlugin {
         VoiceChat.allowUfwPort(port);
         Manhunt.voiceChatPort = port;
         System.setProperty("LOGISCH_VOICECHAT_PORT", String.valueOf(port));
+
+
+        // Spawn protection
+        File props = new File("server.properties");
+        try {
+            List<String> lines = Files.readAllLines(props.toPath());
+            for(int i = 0; i < lines.size(); i++) {
+                if(lines.get(i).startsWith("spawn-protection=")) {
+                    lines.set(i, "spawn-protection=0");
+                    break;
+                }
+            }
+            Files.write(props.toPath(), lines);
+        } catch (Exception err) {
+            err.printStackTrace();
+            Bukkit.getConsoleSender().sendMessage("Failed to read server.properties file.");
+        }
+
     }
 
     @Override
