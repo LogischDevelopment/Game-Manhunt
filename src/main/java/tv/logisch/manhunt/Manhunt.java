@@ -14,6 +14,7 @@ import tv.logisch.api.LogiAPI;
 import tv.logisch.manhunt.commands.CompassCommand;
 import tv.logisch.manhunt.commands.EventCommand;
 import tv.logisch.manhunt.commands.SettingsCommand;
+import tv.logisch.manhunt.commands.TeleportCommand;
 import tv.logisch.manhunt.guis.SettingGUIListener;
 import tv.logisch.manhunt.listener.*;
 import tv.logisch.manhunt.manager.GameManager;
@@ -124,6 +125,8 @@ public final class Manhunt extends JavaPlugin {
             registrar.register("compass", new CompassCommand());
             registrar.register("event", new EventCommand());
             registrar.register("settings", new SettingsCommand());
+            registrar.register("teleport", new TeleportCommand());
+            registrar.register("tp", new TeleportCommand());
         });
 
         Bukkit.getServerTickManager().setFrozen(true);
