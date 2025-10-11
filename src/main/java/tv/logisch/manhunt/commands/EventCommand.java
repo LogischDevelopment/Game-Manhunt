@@ -116,7 +116,7 @@ public class EventCommand implements BasicCommand {
             }
             GameManager.resumeGame();
             sender.sendMessage(Component.text(Manhunt.prefix() + "§7Das Event wurde fortgesetzt!"));
-        } else if(subCommand.equalsIgnoreCase("gui")) {
+        } else if(subCommand.equalsIgnoreCase("gui") || subCommand.equalsIgnoreCase("settings")) {
             if(!(sender instanceof Player player)) {
                 sender.sendMessage(Manhunt.prefix() + "§cDieser Befehl kann nur von einem Spieler ausgeführt werden!");
                 return;
@@ -200,6 +200,9 @@ public class EventCommand implements BasicCommand {
         CommandSender commandSender = ctx.getExecutor();
         if(!commandSender.hasPermission("logisch.manhunt.admin") && !GameManager.isHost(commandSender.getName())) {
             return List.of();
+        }
+        if(args.length == 0) {
+            return List.of("gui", "start", "pause", "resume", "releaseTime", "runner", "kick", "ban", "unban");
         }
         if(args.length == 1) {
             return Stream.of("gui", "start", "pause", "resume", "releaseTime", "runner", "kick", "ban", "unban").filter(w -> w.toLowerCase().startsWith(args[0].toLowerCase())).toList();
