@@ -47,27 +47,29 @@ public class TeleportCommand implements BasicCommand {
                 return;
             }
             target.teleportAsync(receiver.getLocation());
-            p.sendMessage(Component.text(Manhunt.prefix() + "§7Du hast §e" + target.getName() + " §7zu §e" + receiver.getName() + " §7teleportiert!"));
+            p.sendMessage(Component.text(Manhunt.prefix() + "§7Du hast §b" + target.getName() + " §7zu §b" + receiver.getName() + " §7teleportiert!"));
             Bukkit.getConsoleSender().sendMessage("[TELEPORT] " + p.getName() + " teleported " + target.getName() + " to " + receiver.getName());
             return;
         }
 
         p.teleportAsync(target.getLocation());
-        p.sendMessage(Component.text(Manhunt.prefix() + "§7Du wurdest zu §e" + target.getName() + " §7teleportiert!"));
+        p.sendMessage(Component.text(Manhunt.prefix() + "§7Du wurdest zu §b" + target.getName() + " §7teleportiert!"));
         Bukkit.getConsoleSender().sendMessage("[TELEPORT] " + p.getName() + " to " + target.getName());
         return;
     }
 
     private Player findPlayer(String name, Player sender) {
-        Player player;
-        String selector = name.substring(1);
-        switch (selector.toLowerCase()) {
-            case "r", "random" -> player = Manhunt.instance().getServer().getOnlinePlayers().stream().skip((int) (Math.random() * Manhunt.instance().getServer().getOnlinePlayers().size())).findFirst().orElse(null);
-            case "s", "self" -> player = sender;
-            case "l", "last" -> player = Manhunt.instance().getServer().getOnlinePlayers().stream().reduce((first, second) -> second).orElse(null);
-            default -> player = null;
+        if(name.charAt(0) == '@') {
+            Player player;
+            switch (name.substring(1).toLowerCase()) {
+                case "r", "random" -> player = Manhunt.instance().getServer().getOnlinePlayers().stream().skip((int) (Math.random() * Manhunt.instance().getServer().getOnlinePlayers().size())).findFirst().orElse(null);
+                case "s", "self" -> player = sender;
+                case "l", "last" -> player = Manhunt.instance().getServer().getOnlinePlayers().stream().reduce((first, second) -> second).orElse(null);
+                default -> player = null;
+            }
+            return player;
         }
-        return player;
+        return Bukkit.getPlayer(name);
     }
 
     @Override
@@ -89,7 +91,7 @@ public class TeleportCommand implements BasicCommand {
         if(args.length == 2) {
             List<String> list = new ArrayList<>(List.of("@r", "@s", "@l"));
             list.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
-            String prefix = args[0].toLowerCase();
+            String prefix = args[1].toLowerCase();
             return list.stream()
                     .filter(name -> name.toLowerCase().startsWith(prefix))
                     .sorted()
