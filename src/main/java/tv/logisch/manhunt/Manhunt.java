@@ -9,7 +9,6 @@ import org.bukkit.GameRule;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.w3c.dom.stylesheets.LinkStyle;
 import tv.logisch.api.LogiAPI;
 import tv.logisch.manhunt.commands.CompassCommand;
 import tv.logisch.manhunt.commands.EventCommand;
@@ -140,7 +139,8 @@ public final class Manhunt extends JavaPlugin {
             w.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
             w.setGameRule(GameRule.LOCATOR_BAR, false);
             w.setGameRule(GameRule.SPAWN_RADIUS, 0);
-            w.setGameRule(GameRule.SPAWN_CHUNK_RADIUS, 0);
+            w.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
+            w.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
         });
 
     }
